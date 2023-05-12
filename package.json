@@ -1,0 +1,18 @@
+{
+  "name": "screeps-ai",
+  "devDependencies": {
+    "git-describe": "4.0.2",
+    "grunt": "^1.6.1",
+    "grunt-cli": "1.2.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-screeps": "1.5.0",
+    "lodash": "3.10.1",
+    "matchdep": "2.0.0",
+    "module-concat": "^2.1.0"
+  },
+  "dependencies": {
+    "@types/lodash": "3.10.1",
+    "@types/screeps": "^3.1.2"
+  }
+}
