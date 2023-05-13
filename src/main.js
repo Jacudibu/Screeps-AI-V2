@@ -1,5 +1,7 @@
 global.profiler = require('tools/screeps-profiler');
 
+require('clienthacks/clickabletostring')
+
 require('tools/traveler')
 require('tools/logger')
 
