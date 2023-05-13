@@ -27,7 +27,7 @@ const rcl1creep = {
         }
 
         if(creep.harvest(source) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(source);
+            creep.travelTo(source);
         }
     },
 
@@ -37,22 +37,26 @@ const rcl1creep = {
         }
 
         if(creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE ) {
-            creep.moveTo(Game.spawns['Spawn1']);
+            creep.travelTo(Game.spawns['Spawn1']);
         }
     },
 
     _onHarvestFinished(creep) {
         creep.task = TASK.DEPOSIT_ENERGY;
-        this._depositEnergy(creep);
     },
 
     _onDepositFinished(creep) {
-        const sources = creep.room.sources;
+        const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
+
+        const allRCL1Workers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.RCL1_CREEP});
+
+        let i = 0;
+        while(_.filter(allRCL1Workers, creep => creep.taskTargetId === sources[i].id).length >= 3) {
+            i += 1;
+        }
 
         creep.task = TASK.HARVEST_ENERGY;
-        creep.taskTargetId = sources[0].id;
-
-        this._harvestEnergy(creep);
+        creep.taskTargetId = sources[i].id;
     }
 
 
