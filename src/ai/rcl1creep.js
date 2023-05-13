@@ -55,6 +55,10 @@ const rcl1creep = {
             i += 1;
         }
 
+        // TODO: Figure out how many mining spots there are for each source
+        // TODO: Allow spots+1 creep per source
+        // TODO: Allow spots+X creep per source, where X depends on the distance to the spawn
+
         creep.task = TASK.HARVEST_ENERGY;
         creep.taskTargetId = sources[i].id;
     }
