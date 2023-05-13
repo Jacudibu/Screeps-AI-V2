@@ -6,6 +6,7 @@ require('clienthacks/clickabletostring')
 require('tools/logger')
 
 require('globals/roles')
+require('globals/tasks')
 require('globals/utility')
 
 require('prototypes/creep/memorycache')

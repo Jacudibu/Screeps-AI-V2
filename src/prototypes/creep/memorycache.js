@@ -1,9 +1,11 @@
 const cachedValues = [
     "role",
+    "task",
     "taskTargetId"
 ];
 
 Creep.prototype.role = undefined;
+Creep.prototype.task = undefined;
 Creep.prototype.taskTargetId = undefined;
 
 const caches = {};
