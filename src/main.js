@@ -1,4 +1,5 @@
-require('tools.traveler')
+profiler = require('tools/screeps-profiler')
+require('tools/traveler')
 
 if (!Memory.creepsBuilt) {
     Memory.creepsBuilt = 0;

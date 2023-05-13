@@ -3,13 +3,11 @@ module.exports = function(grunt) {
     let branch = grunt.option('branch') || config.branch;
     let email = grunt.option('email') || config.email;
     let token = grunt.option('token') || config.token;
-    let ptr = grunt.option('ptr') ? true : config.ptr;
 
     // this uses github:cavejay/grunt-screeps since the official version doesn't support auth token... yet
     grunt.loadNpmTasks('grunt-screeps');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-rsync');
 
     grunt.initConfig({
         screeps: {
@@ -17,7 +15,6 @@ module.exports = function(grunt) {
                 email: email,
                 token: token,
                 branch: branch,
-                ptr: ptr
             },
             dist: {
                 src: ['dist/*.js']
@@ -37,11 +34,25 @@ module.exports = function(grunt) {
                     rename: function (dest, src) {
                         // Change the path name utilize dots for folders
                         return dest + src.replace(/\//g, '.');
-                    }
+                    },
                 }],
+                options: {
+                    process: function (content, srcpath) {
+                        // Change the / in imports to the flattened . structure
+                        const pattern = /require\('([^']+)'\)/g;
+
+                        let transformedContent = content.replace(pattern, function(match, filePath) {
+                            const transformedPath = filePath.replace(/\//g, '.');
+                            return "require('" + transformedPath + "')";
+                        });
+
+                        return transformedContent;
+                    }
+                }
             }
         },
     });
 
-    grunt.registerTask('main',  ['clean', 'copy:screeps', 'screeps']);
+    grunt.registerTask('rebuild',  ['clean', 'copy']);
+    grunt.registerTask('main',  ['rebuild', 'screeps']);
 };
