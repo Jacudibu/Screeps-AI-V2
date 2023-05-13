@@ -29,8 +29,13 @@ const roomLogic = {
 
     spawnSomething(room, spawn) {
         const body = [WORK, CARRY, MOVE];
-        const name = Memory.creepsBuilt.toString();
         const memory = {role: ROLE.RCL1_CREEP};
+
+        this.spawnCreep(spawn, body, memory)
+    },
+
+    spawnCreep(spawn, body, memory) {
+        const name = Memory.creepsBuilt.toString();
 
         const result = spawn.spawnCreep(body, name, {memory: memory});
         switch (result) {
