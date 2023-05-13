@@ -36,9 +36,7 @@ const roomLogic = {
             }
         }).length;
 
-        const energySourcesInRoom = room.find(FIND_SOURCES).length;
-
-        if (rcl1WorkersInRoom < energySourcesInRoom * RCL1WORKERS_PER_SOURCE) {
+        if (rcl1WorkersInRoom < room.sources.length * RCL1WORKERS_PER_SOURCE) {
             const body = [WORK, CARRY, MOVE];
             const memory = {role: ROLE.RCL1_CREEP};
 

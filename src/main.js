@@ -10,6 +10,7 @@ require('globals/utility')
 
 require('prototypes/creep/memorycache')
 require('prototypes/room/checkForRCLUpdate')
+require('prototypes/room/sources')
 
 const memoryManagement = require('memorymanagement')
 const roomLogic = require("roomlogic");
