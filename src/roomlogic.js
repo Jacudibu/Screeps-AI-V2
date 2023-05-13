@@ -1,3 +1,5 @@
+const RCL1WORKERS_PER_SOURCE = 3;
+
 const roomLogic = {
     run() {
         for (let roomName in Game.rooms) {
@@ -28,10 +30,20 @@ const roomLogic = {
     },
 
     spawnSomething(room, spawn) {
-        const body = [WORK, CARRY, MOVE];
-        const memory = {role: ROLE.RCL1_CREEP};
+        const rcl1WorkersInRoom = room.find(FIND_MY_CREEPS, {
+            filter: creep => {
+                return creep.role === ROLE.RCL1_CREEP;
+            }
+        }).length;
 
-        this.spawnCreep(spawn, body, memory)
+        const energySourcesInRoom = room.find(FIND_SOURCES).length;
+
+        if (rcl1WorkersInRoom < energySourcesInRoom * RCL1WORKERS_PER_SOURCE) {
+            const body = [WORK, CARRY, MOVE];
+            const memory = {role: ROLE.RCL1_CREEP};
+
+            this.spawnCreep(spawn, body, memory)
+        }
     },
 
     spawnCreep(spawn, body, memory) {
@@ -45,7 +57,7 @@ const roomLogic = {
             case ERR_NOT_ENOUGH_ENERGY:
                 break;
             default:
-                log.warning(room + " unexpected error when spawning creep: " + result
+                log.warning(spawn + " unexpected error when spawning creep: " + result
                     + "\nBody: " + body.length + " -> " + body + "\nname:" + name + "\nmemory:" + memory);
                 break;
         }
