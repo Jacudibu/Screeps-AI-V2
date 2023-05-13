@@ -18,20 +18,22 @@ const rcl1creep = {
 
     _harvestEnergy(creep) {
         if(creep.store.getFreeCapacity() === 0) {
-            this._onHarvestFinished(creep);
-            return;
+            return this._onHarvestFinished(creep);
         }
 
-        const sources = creep.room.find(FIND_SOURCES);
-        if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[0]);
+        const source = Game.getObjectById(creep.taskTargetId);
+        if (source === null) {
+            return this._onDepositFinished(creep);
+        }
+
+        if(creep.harvest(source) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(source);
         }
     },
 
     _depositEnergy(creep) {
         if (creep.store.getUsedCapacity() === 0) {
-            this._onDepositFinished(creep);
-            return;
+            return this._onDepositFinished(creep);
         }
 
         if(creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE ) {
@@ -45,7 +47,11 @@ const rcl1creep = {
     },
 
     _onDepositFinished(creep) {
+        const sources = creep.room.sources;
+
         creep.task = TASK.HARVEST_ENERGY;
+        creep.taskTargetId = sources[0].id;
+
         this._harvestEnergy(creep);
     }
 
