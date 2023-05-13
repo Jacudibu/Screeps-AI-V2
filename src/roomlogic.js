@@ -16,32 +16,32 @@ const roomLogic = {
     },
 
     processSpawnQueue(room) {
-        const idleSpawns = room.find(FIND_MY_SPAWNS, {
-            filter: spawn => {
-                return spawn.isActive() && spawn.spawning === null
-            }
+        const idleSpawn = _.find(room.spawns, spawn => {
+            return spawn.my && spawn.isActive() && spawn.spawning === null;
         });
 
-        if (idleSpawns.length === 0) {
+        if (idleSpawn === undefined) {
             return;
         }
 
-        this.spawnSomething(room, idleSpawns[0]);
+        this.spawnRCL1Worker(room, idleSpawn);
     },
 
-    spawnSomething(room, spawn) {
+    spawnRCL1Worker(room, spawn) {
         const rcl1WorkersInRoom = room.find(FIND_MY_CREEPS, {
             filter: creep => {
                 return creep.role === ROLE.RCL1_CREEP;
             }
-        }).length;
+        });
 
-        if (rcl1WorkersInRoom < room.sources.length * RCL1WORKERS_PER_SOURCE) {
-            const body = [WORK, CARRY, MOVE];
-            const memory = {role: ROLE.RCL1_CREEP};
-
-            this.spawnCreep(spawn, body, memory)
+        if (rcl1WorkersInRoom.length >= room.sources.length * RCL1WORKERS_PER_SOURCE) {
+            return;
         }
+
+        const body = [WORK, CARRY, MOVE];
+        const memory = {role: ROLE.RCL1_CREEP};
+
+        this.spawnCreep(spawn, body, memory)
     },
 
     spawnCreep(spawn, body, memory) {

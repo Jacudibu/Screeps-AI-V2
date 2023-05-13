@@ -1,8 +1,8 @@
 const ai = {
-    [ROLE.RCL1_CREEP]:                require('ai.rcl1creep'),
+    [ROLE.RCL1_CREEP]: require('ai/rcl1creep'),
 };
 
-const creepAi = {
+const creepAI = {
     run() {
         for (let name in Game.creeps) {
             const creep = Game.creeps[name];
@@ -32,5 +32,5 @@ const creepAi = {
     },
 };
 
-profiler.registerObject(creepAi, "creepAi");
-module.exports = creepAi;
+profiler.registerObject(creepAI, "creepAI");
+module.exports = creepAI;

@@ -1,16 +1,10 @@
-// TODO: Make this work for any prototype, not just for creeps.
-
 const cachedValues = [
     "role",
+    "taskTargetId"
 ];
 
-// noinspection ConstantIfStatementJS,PointlessBooleanExpressionJS
-if (false) {
-    // for autocompletion in IDE
-
-    // noinspection UnreachableCodeJS
-    Creep.prototype.role = undefined;
-}
+Creep.prototype.role = undefined;
+Creep.prototype.taskTargetId = undefined;
 
 const caches = {};
 const addCachedProperty = function(propertyName) {
