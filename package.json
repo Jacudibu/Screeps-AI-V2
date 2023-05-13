@@ -10,9 +10,5 @@
     "lodash": "3.10.1",
     "matchdep": "2.0.0",
     "module-concat": "^2.1.0"
-  },
-  "dependencies": {
-    "@types/lodash": "3.10.1",
-    "@types/screeps": "^3.1.2"
   }
 }
