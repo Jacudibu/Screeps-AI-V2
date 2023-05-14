@@ -1,3 +1,5 @@
+global.lastMemoryTick = undefined;
+
 const memoryManagement = {
     run() {
         this._deleteDeadCreeps();
@@ -9,7 +11,6 @@ const memoryManagement = {
                 continue;
             }
 
-            utility.deleteCreepCacheOnDeath(creepName);
             delete Memory.creeps[creepName];
         }
     }

@@ -22,13 +22,17 @@ const spawnLogic = {
             return;
         }
 
-        const body = [WORK, CARRY, MOVE];
+        const body = [WORK, CARRY, MOVE, MOVE];
         const memory = {role: ROLE.RCL1_CREEP};
 
         this.spawnCreep(spawn, body, memory)
     },
 
     spawnCreep(spawn, body, memory) {
+        if (!Memory.creepsBuilt) {
+            log.warning("Memory.creepsBuilt was not defined? Did we wipe memory?")
+            Memory.creepsBuilt = 0;
+        }
         const name = Memory.creepsBuilt.toString();
 
         const result = spawn.spawnCreep(body, name, {memory: memory});

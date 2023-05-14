@@ -1,5 +1,3 @@
-// TODO: move lastRCL into memorycache?
-
 let lastRCL = {};
 Room.prototype.checkForRCLUpdate = function() {
     if (this.memory.lastRCL === undefined) {
