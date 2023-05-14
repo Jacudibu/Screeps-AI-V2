@@ -4,6 +4,13 @@ function wrapLoop(fn) {
     let memory;
     let tick;
 
+    // FIXME: Remove once we are out of the sim-age
+    if (Game.rooms['sim'] !== undefined) {
+        return () => {
+            fn();
+        };
+    }
+
     return () => {
         if (tick && tick + 1 === Game.time && memory) {
             // this line is required to disable the default Memory deserialization
