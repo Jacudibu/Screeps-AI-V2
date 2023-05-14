@@ -42,6 +42,15 @@ const rcl1creep = {
             return;
         }
 
+        const extensions = _.filter(creep.room.extensions, extension => extension.canStillStoreEnergy());
+        if (extensions.length > 0) {
+            if(creep.transfer(extensions[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE ) {
+                creep.travelTo(extensions[0]);
+            }
+
+            return;
+        }
+
         const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
         if (constructionSites.length > 0) {
             creep.setTask(TASK.BUILD, constructionSites[0].id);
