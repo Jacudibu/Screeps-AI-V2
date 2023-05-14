@@ -4,7 +4,7 @@ Object.defineProperty(Source.prototype, "earlyGameHarvesterCount", {
         if (cache[this.id]) {
             return cache[this.id];
         } else {
-            return cache[this.id] = 1 + utils.countFreeTilesAroundRoomObject(this) * this.distanceToSpawn / 20;
+            return cache[this.id] = 1 + utils.countFreeTilesAroundRoomObject(this) * (this.distanceToSpawn + 1) / 15;
         }
     }
 });
