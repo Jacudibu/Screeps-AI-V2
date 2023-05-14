@@ -95,13 +95,14 @@ const rcl1creep = {
             case OK:
                 break;
             case ERR_NOT_IN_RANGE:
-                return creep.travelTo(creep.room.controller, {maxRooms: 1, range: 2, stuckValue: 1});
+                return creep.travelTo(target, {maxRooms: 1, range: 2, stuckValue: 1});
             case ERR_NOT_ENOUGH_RESOURCES:
                 creep.setTask(TASK.HARVEST_ENERGY);
                 this.run(creep);
                 break;
             default:
                 log.warning(creep + "building " + target + " " + creep.build(creep.taskTargetId));
+                creep.setTask(TASK.DEPOSIT_ENERGY)
                 break;
         }
     },
@@ -117,7 +118,8 @@ const rcl1creep = {
                 this.run(creep);
                 break;
             default:
-                log.warning(creep + "upgrading controller", creep.upgradeController(creep.room.controller));
+                log.warning(creep + "upgrading controller" + " " + creep.upgradeController(creep.room.controller));
+                creep.setTask(TASK.DEPOSIT_ENERGY)
                 break;
         }
     }
