@@ -3,10 +3,11 @@ const rcl1creep = {
         switch (creep.task) {
             case TASK.HARVEST_ENERGY: return this._harvestEnergy(creep);
             case TASK.DEPOSIT_ENERGY: return this._depositEnergy(creep);
+            case TASK.BUILD: return this._build(creep)
             case TASK.UPGRADE_CONTROLLER: return this._upgradeController(creep)
             default: {
                 // TODO: error handling
-                this._onDepositFinished(creep);
+                this._getMoreEnergy(creep);
             }
         }
     },
@@ -18,7 +19,7 @@ const rcl1creep = {
 
         const source = Game.getObjectById(creep.taskTargetId);
         if (source === null) {
-            return this._onDepositFinished(creep);
+            return this._getMoreEnergy(creep);
         }
 
         if(creep.harvest(source) === ERR_NOT_IN_RANGE) {
@@ -28,7 +29,7 @@ const rcl1creep = {
 
     _depositEnergy(creep) {
         if (creep.store.getUsedCapacity() === 0) {
-            return this._onDepositFinished(creep);
+            return this._getMoreEnergy(creep);
         }
 
         const spawn = creep.room.spawns[0];
@@ -40,7 +41,13 @@ const rcl1creep = {
             return;
         }
 
-        creep.setTask(TASK.UPGRADE_CONTROLLER);
+        const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+        if (constructionSites.length > 0) {
+            creep.setTask(TASK.BUILD);
+            creep.taskTargetId = constructionSites[0].id;
+        } else {
+            creep.setTask(TASK.UPGRADE_CONTROLLER);
+        }
         this.run(creep);
     },
 
@@ -49,7 +56,7 @@ const rcl1creep = {
         this.run(creep);
     },
 
-    _onDepositFinished(creep) {
+    _getMoreEnergy(creep) {
         const source = this._getBestSource(creep);
         creep.setTask(TASK.HARVEST_ENERGY);
         creep.taskTargetId = source.id;
@@ -72,6 +79,31 @@ const rcl1creep = {
 
         log.warning(creep + "Unable to determine which source to pick, choosing the first one instead...")
         return sources[0];
+    },
+
+    _build(creep) {
+        if (creep.store.getUsedCapacity() === 0) {
+            return this._getMoreEnergy(creep);
+        }
+
+        const target = Game.getObjectById(creep.taskTargetId);
+        if (target === undefined) {
+            this._onHarvestFinished() // still got some juice, so let's pretend we are harvesters and let's see when this will cause issues, lul.
+        }
+
+        switch (creep.build(target)) {
+            case OK:
+                break;
+            case ERR_NOT_IN_RANGE:
+                return creep.travelTo(creep.room.controller, {maxRooms: 1, range: 2, stuckValue: 1});
+            case ERR_NOT_ENOUGH_RESOURCES:
+                creep.setTask(TASK.HARVEST_ENERGY);
+                this.run(creep);
+                break;
+            default:
+                log.warning(creep + "building " + target + " " + creep.build(creep.taskTargetId));
+                break;
+        }
     },
 
     _upgradeController(creep) {
