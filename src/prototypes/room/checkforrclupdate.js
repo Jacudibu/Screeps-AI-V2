@@ -13,7 +13,7 @@ Room.prototype.checkForRCLUpdate = function() {
         return false;
     }
 
-    log.info(this + " RCL UPDATE! " + this.memory.rcl[this.name] + " -> " + this.controller.level);
+    log.info(this + " RCL UPDATE! " + this.memory.rcl + " -> " + this.controller.level);
     this.memory.rcl = this.controller.level;
     return true;
 };
