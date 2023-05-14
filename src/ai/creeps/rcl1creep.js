@@ -5,6 +5,7 @@ const rcl1creep = {
             case TASK.DEPOSIT_ENERGY: return this._depositEnergy(creep);
             case TASK.BUILD: return this._build(creep)
             case TASK.UPGRADE_CONTROLLER: return this._upgradeController(creep)
+            case TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES: return this._upgradeControllerButLookOutForConstructionSites(creep)
             default: {
                 // TODO: error handling
                 this._getMoreEnergy(creep);
@@ -43,23 +44,21 @@ const rcl1creep = {
 
         const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
         if (constructionSites.length > 0) {
-            creep.setTask(TASK.BUILD);
-            creep.taskTargetId = constructionSites[0].id;
+            creep.setTask(TASK.BUILD, constructionSites[0].id);
         } else {
-            creep.setTask(TASK.UPGRADE_CONTROLLER);
+            creep.setTask(TASK.UPGRADE_CONTROLLER, undefined);
         }
         this.run(creep);
     },
 
     _onHarvestFinished(creep) {
-        creep.setTask(TASK.DEPOSIT_ENERGY);
+        creep.setTask(TASK.DEPOSIT_ENERGY, undefined);
         this.run(creep);
     },
 
     _getMoreEnergy(creep) {
         const source = this._getBestSource(creep);
-        creep.setTask(TASK.HARVEST_ENERGY);
-        creep.taskTargetId = source.id;
+        creep.setTask(TASK.HARVEST_ENERGY, source.id);
 
         this.run(creep);
     },
@@ -97,12 +96,14 @@ const rcl1creep = {
             case ERR_NOT_IN_RANGE:
                 return creep.travelTo(target, {maxRooms: 1, range: 2, stuckValue: 1});
             case ERR_NOT_ENOUGH_RESOURCES:
-                creep.setTask(TASK.HARVEST_ENERGY);
-                this.run(creep);
+                this._getMoreEnergy(creep);
+                break;
+            case ERR_INVALID_TARGET:
+                // Probably finished building
+                creep.setTask(TASK.DEPOSIT_ENERGY, undefined);
                 break;
             default:
                 log.warning(creep + "building " + target + " " + creep.build(creep.taskTargetId));
-                creep.setTask(TASK.DEPOSIT_ENERGY)
                 break;
         }
     },
@@ -114,14 +115,26 @@ const rcl1creep = {
             case ERR_NOT_IN_RANGE:
                 return creep.travelTo(creep.room.controller, {maxRooms: 1, range: 2, stuckValue: 1});
             case ERR_NOT_ENOUGH_RESOURCES:
-                creep.setTask(TASK.HARVEST_ENERGY);
+                this._getMoreEnergy(creep);
                 this.run(creep);
                 break;
             default:
                 log.warning(creep + "upgrading controller" + " " + creep.upgradeController(creep.room.controller));
-                creep.setTask(TASK.DEPOSIT_ENERGY)
+                creep.setTask(TASK.DEPOSIT_ENERGY, undefined)
                 break;
         }
+    },
+
+    _upgradeControllerButLookOutForConstructionSites(creep) {
+        const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+        if (constructionSites.length > 0) {
+            creep.setTask(TASK.BUILD, constructionSites[0].id);
+            creep.say(creepTalk.surpriseTargetChange);
+            this.run(creep);
+            return;
+        }
+
+        this._upgradeController(creep);
     }
 };
 

@@ -1,7 +1,4 @@
-Creep.prototype.setTask = function(task, keepTaskTargetId) {
-    if (!keepTaskTargetId) {
-        this.taskTargetId = undefined;
-    }
-
+Creep.prototype.setTask = function(task, newTargetId) {
+    this.taskTargetId = newTargetId;
     this.task = task;
 };

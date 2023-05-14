@@ -27,13 +27,21 @@ function placePlannedConstructionSite(room) {
         return;
     }
 
-    placeConstructionSiteIfNeeded(room);
+    if (room.memory.rcl <= 1) {
+        return;
+    }
+
+    const didPlaceSomething = placeConstructionSiteIfNeeded(room);
+    if (didPlaceSomething && room.memory.rcl < 4) {
+        for (const creep of room.find(FIND_MY_CREEPS, {filter: creep => creep.role === ROLE.RCL1_CREEP && creep.task === TASK.UPGRADE_CONTROLLER})) {
+            creep.setTask(TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES, undefined);
+        }
+    }
 }
 
 function placeConstructionSiteIfNeeded(room) {
     for (let i = 0; i < STRUCTURE_PRIORITY_ORDER.length; i++) {
         if (canStructureBeBuilt(room, STRUCTURE_PRIORITY_ORDER[i])) {
-            log.info("SOMETHING built")
             return placeConstructionSite(room, STRUCTURE_PRIORITY_ORDER[i]);
         }
     }

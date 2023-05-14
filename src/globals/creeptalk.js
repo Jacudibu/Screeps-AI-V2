@@ -1,5 +1,6 @@
 global.creepTalk = {};
 
+global.creepTalk.surpriseTargetChange   = "OwO";
 global.creepTalk.dropResource           = "ಥ~ಥ";
 global.creepTalk.tableFlip              = "(ノ°Д°）ノ︵┻┻";
 global.creepTalk.rangedAttack           = "*pew*";
