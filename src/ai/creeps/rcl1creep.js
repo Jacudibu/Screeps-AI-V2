@@ -51,6 +51,15 @@ const rcl1creep = {
             return;
         }
 
+        const towers = _.filter(creep.room.towers, tower => tower.canStillStoreEnergy());
+        if (towers.length > 0) {
+            if(creep.transfer(towers[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE ) {
+                creep.travelTo(towers[0]);
+            }
+
+            return;
+        }
+
         const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
         if (constructionSites.length > 0) {
             creep.setTask(TASK.BUILD, constructionSites[0].id);
