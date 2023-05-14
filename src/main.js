@@ -5,6 +5,7 @@ require('clienthacks/clickabletostring')
 
 require('tools/logger')
 
+require('globals/creeptalk')
 require('globals/roles')
 require('globals/tasks')
 require('globals/utility')

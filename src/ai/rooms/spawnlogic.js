@@ -22,7 +22,12 @@ const spawnLogic = {
             return;
         }
 
-        const body = [WORK, CARRY, MOVE, MOVE];
+        let body;
+        if (room.energyCapacityAvailable >= 500) {
+            body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+        } else {
+            body = [WORK, CARRY, MOVE, MOVE];
+        }
         const memory = {role: ROLE.RCL1_CREEP};
 
         this.spawnCreep(spawn, body, memory)
