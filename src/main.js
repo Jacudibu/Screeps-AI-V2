@@ -9,11 +9,14 @@ require('globals/roles')
 require('globals/tasks')
 require('globals/utility')
 
+require('utils')
+
 require('prototypes/creep/memorycache')
 require('prototypes/room/checkforrclupdate')
 require('prototypes/room/sources')
 require('prototypes/room/structurecache')
 require('prototypes/source/distancetospawn')
+require('prototypes/source/freetilecount')
 
 const memoryManagement = require('memorymanagement')
 const roomLogic = require("roomlogic");

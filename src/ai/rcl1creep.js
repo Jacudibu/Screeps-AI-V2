@@ -46,23 +46,29 @@ const rcl1creep = {
     },
 
     _onDepositFinished(creep) {
-        const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
-
-        const allRCL1Workers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.RCL1_CREEP});
-
-        let i = 0;
-        while(_.filter(allRCL1Workers, creep => creep.taskTargetId === sources[i].id).length >= 3) {
-            i += 1;
-        }
-
-        // TODO: Figure out how many mining spots there are for each source
-        // TODO: Allow spots+1 creep per source
-        // TODO: Allow spots+X creep per source, where X depends on the distance to the spawn
+        const source = this._getBestSource(creep);
 
         creep.task = TASK.HARVEST_ENERGY;
-        creep.taskTargetId = sources[i].id;
-    }
+        creep.taskTargetId = source.id;
+    },
 
+    _getBestSource(creep) {
+        const allRCL1Workers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.RCL1_CREEP});
+        const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
+
+        for (let i = 0; i < sources.length; i++) {
+            const source = sources[i];
+            const creepsAssignedToSource = utils.count(allRCL1Workers, creep => creep.taskTargetId === source.id);
+            const sourceMaxHarvesterCount = source.freeTileCount + source.distanceToSpawn / 10;
+
+            if (creepsAssignedToSource < sourceMaxHarvesterCount){
+                return source;
+            }
+        }
+
+        log.warning(creep + "Unable to determine which source to pick, choosing the first one instead...")
+        return sources[0];
+    }
 
 };
 
