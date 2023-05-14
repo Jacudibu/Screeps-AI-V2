@@ -23,7 +23,13 @@ const ownedRoom = {
     },
 
     _runRoomLogic: function(room) {
-        room.checkForRCLUpdate();
+        if (room.checkForRCLUpdate()) {
+            if (room.memory.layout === undefined) {
+                log.info(room + "Generating room layout for respawn room.")
+                room.memory.layout = layouts.processor.generateRoomLayoutForRespawnRoom(room);
+            }
+            // TODO: Handle this
+        }
         spawnLogic.run(room);
     },
 }
