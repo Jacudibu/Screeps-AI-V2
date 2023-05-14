@@ -1,3 +1,4 @@
+const baseBuilder = require('ai/rooms/basebuilder')
 const spawnLogic = require("spawnlogic");
 
 const ownedRoom = {
@@ -28,9 +29,10 @@ const ownedRoom = {
                 log.info(room + "Generating room layout for respawn room.")
                 room.memory.layout = layouts.processor.generateRoomLayoutForRespawnRoom(room);
             }
-            // TODO: Handle this
         }
         spawnLogic.run(room);
+
+        baseBuilder.placePlannedConstructionSite(room);
     },
 }
 

@@ -66,8 +66,8 @@ global.layouts.processor = {
         for (let i = 0; i < positionArray.length; i++) {
             const pos = positionArray[i];
             result.push({
-                x: pos.x - offsetX,
-                y: pos.y - offsetY,
+                x: pos.x + offsetX,
+                y: pos.y + offsetY,
             })
         }
         return result;
