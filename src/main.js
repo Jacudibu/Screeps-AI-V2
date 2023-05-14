@@ -12,11 +12,13 @@ require('globals/utility')
 require('utils')
 
 require('prototypes/creep/memorycache')
+require('prototypes/creep/setTask')
 require('prototypes/room/checkforrclupdate')
 require('prototypes/room/sources')
 require('prototypes/room/structurecache')
 require('prototypes/source/distancetospawn')
 require('prototypes/source/earlygameharvestercount')
+require('prototypes/structure/canstillstoreenergy')
 
 const memoryManagement = require('memorymanagement')
 const roomLogic = require("roomai");
