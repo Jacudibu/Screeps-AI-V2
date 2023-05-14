@@ -1,5 +1,5 @@
 const baseBuilder = require('ai/rooms/basebuilder')
-const spawnLogic = require("spawnlogic");
+const spawnLogic = require('ai/rooms/spawnlogic');
 
 const ownedRoom = {
     run() {

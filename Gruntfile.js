@@ -39,7 +39,7 @@ module.exports = function(grunt) {
                 options: {
                     process: function (content, srcpath) {
                         // Change the / in imports to the flattened . structure
-                        const pattern = /require\('([^']+)'\)/g;
+                        const pattern = /require\(['"](.+)['"]\)/g;
 
                         let transformedContent = content.replace(pattern, function(match, filePath) {
                             const transformedPath = filePath.replace(/\//g, '.');
