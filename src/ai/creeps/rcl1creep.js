@@ -43,6 +43,9 @@ const rcl1creep = {
 
     _onHarvestFinished(creep) {
         creep.task = TASK.DEPOSIT_ENERGY;
+        creep.taskTargetId = undefined;
+
+        this.run(creep);
     },
 
     _onDepositFinished(creep) {
@@ -50,6 +53,8 @@ const rcl1creep = {
 
         creep.task = TASK.HARVEST_ENERGY;
         creep.taskTargetId = source.id;
+
+        this.run(creep);
     },
 
     _getBestSource(creep) {
@@ -59,9 +64,8 @@ const rcl1creep = {
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];
             const creepsAssignedToSource = utils.count(allRCL1Workers, creep => creep.taskTargetId === source.id);
-            const sourceMaxHarvesterCount = source.freeTileCount + source.distanceToSpawn / 10;
 
-            if (creepsAssignedToSource < sourceMaxHarvesterCount){
+            if (creepsAssignedToSource < source.earlyGameHarvesterCount){
                 return source;
             }
         }

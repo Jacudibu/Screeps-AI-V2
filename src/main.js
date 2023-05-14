@@ -16,10 +16,10 @@ require('prototypes/room/checkforrclupdate')
 require('prototypes/room/sources')
 require('prototypes/room/structurecache')
 require('prototypes/source/distancetospawn')
-require('prototypes/source/freetilecount')
+require('prototypes/source/earlygameharvestercount')
 
 const memoryManagement = require('memorymanagement')
-const roomLogic = require("roomlogic");
+const roomLogic = require("roomai");
 const creepAi = require("creepai");
 
 log.warning("====== Global reset registered ======");

@@ -1,21 +1,5 @@
-const RCL1WORKERS_PER_SOURCE = 3;
-
-const roomLogic = {
-    run() {
-        for (let roomName in Game.rooms) {
-            let room = Game.rooms[roomName];
-            if (room.controller && room.controller.my) {
-                this.updateOwnedRoom(room);
-            }
-        }
-    },
-
-    updateOwnedRoom(room) {
-        room.checkForRCLUpdate();
-        this.processSpawnQueue(room);
-    },
-
-    processSpawnQueue(room) {
+const spawnLogic = {
+    run(room) {
         const idleSpawn = _.find(room.spawns, spawn => {
             return spawn.my && spawn.isActive() && spawn.spawning === null;
         });
@@ -34,7 +18,7 @@ const roomLogic = {
             }
         });
 
-        if (rcl1WorkersInRoom.length >= room.sources.length * RCL1WORKERS_PER_SOURCE) {
+        if (rcl1WorkersInRoom.length >= _.sum(room.sources, source => source.earlyGameHarvesterCount)) {
             return;
         }
 
@@ -62,5 +46,5 @@ const roomLogic = {
     }
 }
 
-profiler.registerObject(roomLogic, "roomLogic");
-module.exports = roomLogic;
+profiler.registerObject(spawnLogic, "spawnLogic");
+module.exports = spawnLogic;
