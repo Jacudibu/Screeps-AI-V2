@@ -23,7 +23,9 @@ const spawnLogic = {
         }
 
         let body;
-        if (room.energyCapacityAvailable >= 500) {
+        if (room.energyCapacityAvailable >= 750) {
+            body = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
+        } else if (room.energyCapacityAvailable >= 500) {
             body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
         } else {
             body = [WORK, CARRY, MOVE, MOVE];

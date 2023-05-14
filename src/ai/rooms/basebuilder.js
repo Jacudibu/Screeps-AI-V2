@@ -130,8 +130,8 @@ function isStructureConstructableAt(room, structureType, pos) {
                 }
                 break;
             default:
-                log.error(room + "Unexpected lookAt result when placing construction site: " + thing.type);
-                return false;
+                log.warning(room + "Unexpected lookAt result when placing construction site: " + thing.type + ". Expecting that everything will be fine and proceeding with construction.");
+                return true;
         }
     }
 
