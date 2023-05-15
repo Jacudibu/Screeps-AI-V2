@@ -30,7 +30,7 @@ const rcl1creep = {
         }
     },
 
-    _figureOutHowToUseEnergy(creep) {
+    _figureOutHowToUseEnergy(creep, didJustFinishConstructingSomething = false) {
         let target = this._findDepositEnergyTarget(creep);
         if (target !== undefined) {
             creep.setTask(TASK.DEPOSIT_ENERGY, target.id);
@@ -43,7 +43,11 @@ const rcl1creep = {
             return;
         }
 
-        creep.setTask(TASK.UPGRADE_CONTROLLER, undefined);
+        if (didJustFinishConstructingSomething) {
+            creep.setTask(TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES, undefined);
+        } else {
+            creep.setTask(TASK.UPGRADE_CONTROLLER, undefined);
+        }
     },
 
     _findConstructionSite(creep) {
@@ -127,7 +131,7 @@ const rcl1creep = {
 
         const target = Game.getObjectById(creep.taskTargetId);
         if (target === undefined) {
-            this._figureOutHowToUseEnergy(creep);
+            this._figureOutHowToUseEnergy(creep, true);
             this.run(creep);
             return;
         }
@@ -142,7 +146,7 @@ const rcl1creep = {
                 break;
             case ERR_INVALID_TARGET:
                 // Probably finished building or so
-                this._figureOutHowToUseEnergy(creep);
+                this._figureOutHowToUseEnergy(creep, true);
                 this.run(creep);
                 return;
             default:

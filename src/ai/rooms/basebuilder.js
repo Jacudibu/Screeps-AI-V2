@@ -41,7 +41,7 @@ function placePlannedConstructionSite(room) {
 
 function placeConstructionSiteIfNeeded(room) {
     for (let i = 0; i < STRUCTURE_PRIORITY_ORDER.length; i++) {
-        if (STRUCTURE_PRIORITY_ORDER[i] === STRUCTURE_ROAD && Room.rcl < 4) {
+        if (STRUCTURE_PRIORITY_ORDER[i] === STRUCTURE_ROAD && room.memory.rcl < 4) {
             return false;
         }
 
