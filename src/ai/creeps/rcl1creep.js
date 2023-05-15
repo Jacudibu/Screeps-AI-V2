@@ -15,7 +15,9 @@ const rcl1creep = {
 
     _harvestEnergy(creep) {
         if(creep.store.getFreeCapacity() === 0) {
-            return this._onHarvestFinished(creep);
+            this._figureOutHowToUseEnergy(creep);
+            this.run(creep);
+            return;
         }
 
         const source = Game.getObjectById(creep.taskTargetId);
@@ -28,49 +30,69 @@ const rcl1creep = {
         }
     },
 
+    _figureOutHowToUseEnergy(creep) {
+        let target = this._findDepositEnergyTarget(creep);
+        if (target !== undefined) {
+            creep.setTask(TASK.DEPOSIT_ENERGY, target.id);
+            return;
+        }
+
+        target = this._findConstructionSite(creep)
+        if (target !== undefined) {
+            creep.setTask(TASK.BUILD, target.id);
+            return;
+        }
+
+        creep.setTask(TASK.UPGRADE_CONTROLLER, undefined);
+    },
+
+    _findConstructionSite(creep) {
+        const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+        if (constructionSites.length > 0) {
+            return constructionSites[0];
+        }
+
+        return undefined;
+    },
+
+    _findDepositEnergyTarget(creep) {
+        const spawn = creep.room.spawns[0];
+        if (spawn.canStillStoreEnergy()) {
+            return spawn;
+        }
+
+        const extensions = _.filter(creep.room.extensions, extension => extension.canStillStoreEnergy());
+        if (extensions.length > 0) {
+            return extensions[0];
+        }
+
+        const towers = _.filter(creep.room.towers, tower => tower.canStillStoreEnergy());
+        if (towers.length > 0) {
+            return towers[0];
+        }
+
+        return undefined;
+    },
+
     _depositEnergy(creep) {
         if (creep.store.getUsedCapacity() === 0) {
             return this._getMoreEnergy(creep);
         }
 
-        const spawn = creep.room.spawns[0];
-        if (spawn.canStillStoreEnergy()) {
-            if(creep.transfer(spawn, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE ) {
-                creep.travelTo(spawn);
-            }
-
-            return;
+        const target = Game.getObjectById(creep.taskTargetId);
+        const result = creep.transfer(target, RESOURCE_ENERGY);
+        switch (result) {
+            case OK:
+                return;
+            case ERR_FULL:
+                this._figureOutHowToUseEnergy(creep);
+                this.run(creep);
+                return;
+            case ERR_NOT_IN_RANGE:
+                creep.travelTo(target);
+                return;
         }
 
-        const extensions = _.filter(creep.room.extensions, extension => extension.canStillStoreEnergy());
-        if (extensions.length > 0) {
-            if(creep.transfer(extensions[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE ) {
-                creep.travelTo(extensions[0]);
-            }
-
-            return;
-        }
-
-        const towers = _.filter(creep.room.towers, tower => tower.canStillStoreEnergy());
-        if (towers.length > 0) {
-            if(creep.transfer(towers[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE ) {
-                creep.travelTo(towers[0]);
-            }
-
-            return;
-        }
-
-        const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
-        if (constructionSites.length > 0) {
-            creep.setTask(TASK.BUILD, constructionSites[0].id);
-        } else {
-            creep.setTask(TASK.UPGRADE_CONTROLLER, undefined);
-        }
-        this.run(creep);
-    },
-
-    _onHarvestFinished(creep) {
-        creep.setTask(TASK.DEPOSIT_ENERGY, undefined);
         this.run(creep);
     },
 
@@ -105,7 +127,9 @@ const rcl1creep = {
 
         const target = Game.getObjectById(creep.taskTargetId);
         if (target === undefined) {
-            this._onHarvestFinished() // still got some juice, so let's pretend we are harvesters and let's see when this will cause issues, lul.
+            this._figureOutHowToUseEnergy(creep);
+            this.run(creep);
+            return;
         }
 
         switch (creep.build(target)) {
@@ -117,9 +141,10 @@ const rcl1creep = {
                 this._getMoreEnergy(creep);
                 break;
             case ERR_INVALID_TARGET:
-                // Probably finished building
-                creep.setTask(TASK.DEPOSIT_ENERGY, undefined);
-                break;
+                // Probably finished building or so
+                this._figureOutHowToUseEnergy(creep);
+                this.run(creep);
+                return;
             default:
                 log.warning(creep + "building " + target + " " + creep.build(creep.taskTargetId));
                 break;
