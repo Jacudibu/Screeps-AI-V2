@@ -27,20 +27,10 @@ const ownedRoom = {
 
     _runRoomLogic: function(room) {
         if (room.checkForRCLUpdate()) {
-            if (room.layout === undefined) {
+            if (room.layout.core === undefined) {
                 log.info(room + "Generating room layout for respawn room.")
-                room.layout = layouts.processor.generateRoomLayoutForRespawnRoom(room);
+                room.layout.core = layouts.processor.generateRoomLayoutForRespawnRoom(room);
             }
-        }
-        if (DEBUG_ROOM_LAYOUTS) {
-            const opts = {opacity: 0.2};
-            for (const structureType in room.layout) {
-                for (const pos of room.layout[structureType]) {
-                    room.visual.structure(pos.x, pos.y, structureType, opts);
-                }
-            }
-
-            room.visual.connectRoads(opts);
         }
 
         spawnLogic.run(room);
@@ -54,6 +44,23 @@ const ownedRoom = {
         }
 
         layouts.processor.generateRoadsToSources(room);
+
+        if (DEBUG_ROOM_LAYOUTS) {
+            const opts = {opacity: 0.2};
+            for (const structureType in room.layout.core) {
+                for (const pos of room.layout.core[structureType]) {
+                    room.visual.structure(pos.x, pos.y, structureType, opts);
+                }
+            }
+
+            for (const i in room.layout.roads.sources) {
+                for (const pos of room.layout.roads.sources[i]) {
+                    room.visual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
+                }
+            }
+
+            room.visual.connectRoads(opts);
+        }
     },
 }
 

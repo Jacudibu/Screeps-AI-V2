@@ -16,6 +16,7 @@ const STRUCTURES_WHICH_BLOCK_PATHING = [
     STRUCTURE_FACTORY,
 ];
 
+const COST_ROAD = 1;
 const COST_PLAIN = 2;
 const COST_SWAMP = 5;
 const COST_AROUND_RESOURCES = 20;
@@ -26,25 +27,31 @@ let costMatrixCache = {};
 
 const roadGenerator = {
     findRoadPath(room) {
-        let goals = [];
+        const goals = [];
 
-        for (const pos of room.layout[STRUCTURE_ROAD]) {
-            goals.push({pos: new RoomPosition(pos.x, pos.y, room.name), range: 1})
+        for (const pos of room.layout.core[STRUCTURE_ROAD]) {
+            goals.push({pos: new RoomPosition(pos.x, pos.y, room.name), range: 1}); // TODO: Maybe only declare the position below the storage as goal? Needs benchmarking for multiroom requests
         }
 
         const roomCallback = function(roomName) {
             return roadGenerator._roomCallback(room, roomName);
         }
 
-        for (const source of room.sources) {
-            const result = PathFinder.search(source.pos, goals, {maxRooms: 1,
+        room.layout.roads = {};
+        room.layout.roads.sources = [];
+        for (const i in room.sources) {
+            const result = PathFinder.search(room.sources[i].pos, goals, {maxRooms: 1,
                 plainCost: COST_PLAIN,
                 swampCost: COST_SWAMP,
                 roomCallback: roomCallback})
+
+            const path = [];
             for (const pos of result.path) {
-                goals.push(pos);
-                room.visual.structure(pos.x, pos.y, STRUCTURE_ROAD)
+                path.push({x: pos.x, y: pos.y});
+                costMatrixCache[room.name].set(pos.x, pos.y, COST_ROAD);
             }
+
+            room.layout.roads.sources.push(path);
         }
     },
 
@@ -52,16 +59,15 @@ const roadGenerator = {
         if (costMatrixCache[callbackRoomName]) {
             return costMatrixCache[callbackRoomName];
         }
-
-        let costMatrix = costMatrixCache[callbackRoomName] = new PathFinder.CostMatrix();
+        const costMatrix = costMatrixCache[callbackRoomName] = new PathFinder.CostMatrix();
         let room;
         if (callbackRoomName === targetRoom.name) {
             room = targetRoom;
             for (const structureType of STRUCTURES_WHICH_BLOCK_PATHING) {
-                this._setCostsForArrayIfItExists(costMatrix, targetRoom.layout, structureType, COST_NOT_WALKABLE);
+                this._setCostsForArrayIfItExists(costMatrix, targetRoom.layout.core, structureType, COST_NOT_WALKABLE);
             }
 
-            this._setCostsForArrayIfItExists(costMatrix, targetRoom.layout, STRUCTURE_ROAD, 1);
+            this._setCostsForArrayIfItExists(costMatrix, targetRoom.layout.core, STRUCTURE_ROAD, COST_ROAD);
         } else {
             // Do the same but with room.remotes[roomName]
             room = Game.rooms[targetRoom];
@@ -89,7 +95,7 @@ const roadGenerator = {
     _addExtraCostAroundRoomResources(costMatrix, room, terrain) {
         const roomResources = [];
         roomResources.push(...room.sources);
-        if (room.mineral) { // A sim quirk.
+        if (room.mineral) { // sim & highways
             roomResources.push(room.mineral);
         }
         if (room.controller) {
