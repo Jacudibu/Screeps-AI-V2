@@ -1,6 +1,8 @@
 const baseBuilder = require('ai/rooms/basebuilder')
 const spawnLogic = require('ai/rooms/spawnlogic');
 
+const DEBUG_ROOM_LAYOUTS = true;
+
 const ownedRoom = {
     run() {
         for (let roomName in Game.rooms) {
@@ -30,6 +32,17 @@ const ownedRoom = {
                 room.memory.layout = layouts.processor.generateRoomLayoutForRespawnRoom(room);
             }
         }
+        if (DEBUG_ROOM_LAYOUTS) {
+            const opts = {opacity: 0.2};
+            for (const structureType in room.memory.layout) {
+                for (const pos of room.memory.layout[structureType]) {
+                    room.visual.structure(pos.x, pos.y, structureType, opts);
+                }
+            }
+
+            room.visual.connectRoads(opts);
+        }
+
         spawnLogic.run(room);
 
         baseBuilder.placePlannedConstructionSite(room);

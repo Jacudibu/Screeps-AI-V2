@@ -1,5 +1,6 @@
 global.profiler = require('tools/screeps-profiler');
 global.traveler = require('tools/traveler')
+require('tools/roomvisual')
 
 require('clienthacks/clickabletostring')
 
@@ -18,6 +19,7 @@ require('prototypes/creep/setTask')
 require('prototypes/room/checkforrclupdate')
 require('prototypes/room/sources')
 require('prototypes/room/structurecache')
+require('prototypes/room/tasks')
 require('prototypes/source/distancetospawn')
 require('prototypes/source/earlygameharvestercount')
 require('prototypes/structure/canstillstoreenergy')
