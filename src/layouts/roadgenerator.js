@@ -22,6 +22,8 @@ const COST_AROUND_RESOURCES = 20;
 const COST_TUNNEL = 60;
 const COST_NOT_WALKABLE = 255;
 
+let costMatrixCache = {};
+
 const roadGenerator = {
     findRoadPath(room) {
         let goals = [];
@@ -47,7 +49,11 @@ const roadGenerator = {
     },
 
     _roomCallback(targetRoom, callbackRoomName) {
-        let costMatrix = new PathFinder.CostMatrix();
+        if (costMatrixCache[callbackRoomName]) {
+            return costMatrixCache[callbackRoomName];
+        }
+
+        let costMatrix = costMatrixCache[callbackRoomName] = new PathFinder.CostMatrix();
         let room;
         if (callbackRoomName === targetRoom.name) {
             room = targetRoom;
