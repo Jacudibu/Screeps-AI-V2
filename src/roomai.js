@@ -59,6 +59,14 @@ const ownedRoom = {
                 }
             }
 
+            for (const pos of room.layout.roads.controller) {
+                room.visual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
+            }
+
+            for (const pos of room.layout.roads.mineral) {
+                room.visual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
+            }
+
             room.visual.connectRoads(opts);
         }
     },

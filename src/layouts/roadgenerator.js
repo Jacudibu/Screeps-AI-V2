@@ -39,20 +39,35 @@ const roadGenerator = {
 
         room.layout.roads = {};
         room.layout.roads.sources = [];
+        // TODO: Filter out duplicate roads
         for (const i in room.sources) {
-            const result = PathFinder.search(room.sources[i].pos, goals, {maxRooms: 1,
-                plainCost: COST_PLAIN,
-                swampCost: COST_SWAMP,
-                roomCallback: roomCallback})
-
-            const path = [];
-            for (const pos of result.path) {
-                path.push({x: pos.x, y: pos.y});
-                costMatrixCache[room.name].set(pos.x, pos.y, COST_ROAD);
-            }
-
+            const path = this._getPathTo(room, room.sources[i], goals, roomCallback);
             room.layout.roads.sources.push(path);
         }
+
+        if (room.controller) {
+            room.layout.roads.controller = this._getPathTo(room, room.controller, goals, roomCallback);
+        }
+
+        if (room.mineral) {
+            room.layout.roads.controller = this._getPathTo(room, room.mineral, goals, roomCallback);
+        }
+    },
+
+    _getPathTo(room, target, goals, roomCallback) {
+        const result = PathFinder.search(target.pos, goals, {
+            maxRooms: 1,
+            plainCost: COST_PLAIN,
+            swampCost: COST_SWAMP,
+            roomCallback: roomCallback
+        })
+
+        const path = [];
+        for (const pos of result.path) {
+            path.push({x: pos.x, y: pos.y});
+            costMatrixCache[room.name].set(pos.x, pos.y, COST_ROAD);
+        }
+        return path;
     },
 
     _roomCallback(targetRoom, callbackRoomName) {
