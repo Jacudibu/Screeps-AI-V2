@@ -28,7 +28,7 @@ const creepAI = {
     },
 
     _runCreepLogic: function(creep) {
-        ai[creep.role].run(creep);
+        ai[creep.role](creep);
     },
 };
 
