@@ -54,7 +54,7 @@ function placeConstructionSiteIfNeeded(room) {
 }
 
 function canStructureBeBuilt(room, structureType) {
-    const layout = room.memory.layout;
+    const layout = room.layout;
 
     if (layout[structureType] === undefined) {
         return false;
@@ -74,7 +74,7 @@ function canStructureBeBuilt(room, structureType) {
 }
 
 function placeConstructionSite(room, structureType) {
-    const layout = room.memory.layout;
+    const layout = room.layout;
 
     for (const position of layout[structureType]) {
         if (!isStructureConstructableAt(room, structureType, position)) {

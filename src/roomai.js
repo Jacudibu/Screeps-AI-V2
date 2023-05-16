@@ -27,15 +27,15 @@ const ownedRoom = {
 
     _runRoomLogic: function(room) {
         if (room.checkForRCLUpdate()) {
-            if (room.memory.layout === undefined) {
+            if (room.layout === undefined) {
                 log.info(room + "Generating room layout for respawn room.")
-                room.memory.layout = layouts.processor.generateRoomLayoutForRespawnRoom(room);
+                room.layout = layouts.processor.generateRoomLayoutForRespawnRoom(room);
             }
         }
         if (DEBUG_ROOM_LAYOUTS) {
             const opts = {opacity: 0.2};
-            for (const structureType in room.memory.layout) {
-                for (const pos of room.memory.layout[structureType]) {
+            for (const structureType in room.layout) {
+                for (const pos of room.layout[structureType]) {
                     room.visual.structure(pos.x, pos.y, structureType, opts);
                 }
             }
@@ -52,6 +52,8 @@ const ownedRoom = {
                 tower.attack(hostiles[0])
             }
         }
+
+        layouts.processor.generateRoadsToSources(room);
     },
 }
 

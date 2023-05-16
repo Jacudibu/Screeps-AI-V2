@@ -1,3 +1,5 @@
+const roadGenerator = require("layouts/roadgenerator")
+
 global.layouts = {};
 global.layouts.processor = {
     generateRoomLayout(room) {
@@ -108,6 +110,10 @@ global.layouts.processor = {
             offsetX: minX,
             offsetY: minY,
         };
+    },
+
+    generateRoadsToSources(room) {
+        roadGenerator.findRoadPath(room);
     }
 }
 

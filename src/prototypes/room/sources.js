@@ -9,7 +9,6 @@ Object.defineProperty(Room.prototype, 'sources', {
                     roomSourceIds[this.name] = null;
                     return this._sources = null;
                 }
-
                 roomSourceIds[this.name] = _.map(sources, source => source.id);
                 return this._sources = sources;
             } else {
