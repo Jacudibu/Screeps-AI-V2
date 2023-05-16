@@ -44,8 +44,14 @@ const ownedRoom = {
         }
 
         spawnLogic.run(room);
-
         baseBuilder.placePlannedConstructionSite(room);
+
+        const hostiles = room.find(FIND_HOSTILE_CREEPS);
+        if (hostiles.length > 0) {
+            for (const tower of room.towers) {
+                tower.attack(hostiles[0])
+            }
+        }
     },
 }
 
