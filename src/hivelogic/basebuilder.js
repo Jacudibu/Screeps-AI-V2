@@ -33,7 +33,7 @@ function placePlannedConstructionSite(hive, room) {
 
     const didPlaceSomething = placeConstructionSiteIfNeeded(hive.layout, room);
     if (didPlaceSomething && room.memory.rcl < 4) {
-        for (const creep of room.find(FIND_MY_CREEPS, {filter: creep => creep.role === ROLE.EARLY_CREEP && creep.task === TASK.UPGRADE_CONTROLLER})) {
+        for (const creep of room.find(FIND_MY_CREEPS, {filter: creep => creep.role === ROLE.EARLY_WORKER && creep.task === TASK.UPGRADE_CONTROLLER})) {
             creep.setTask(TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES, undefined);
         }
     }

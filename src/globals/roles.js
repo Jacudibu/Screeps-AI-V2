@@ -1,5 +1,5 @@
 global.ROLE = {
-    EARLY_CREEP: "early",
+    EARLY_WORKER: "early",
     SCOUT: "scout",
 };
 

@@ -8,20 +8,33 @@ const spawnLogic = {
             return;
         }
 
-        this.spawnRCL1Worker(room, idleSpawn);
-    },
-
-    spawnRCL1Worker(room, spawn) {
-        const rcl1WorkersInRoom = room.find(FIND_MY_CREEPS, {
-            filter: creep => {
-                return creep.role === ROLE.EARLY_CREEP;
-            }
-        });
-
-        if (rcl1WorkersInRoom.length >= _.sum(room.sources, source => source.earlyGameHarvesterCount)) {
+        if (this._areEarlyWorkersNeeded(room)) {
+            this._spawnEarlyWorker(room, idleSpawn);
             return;
         }
 
+        if (this._areScoutsNeeded(room)) {
+            this._spawnScout(room, idleSpawn);
+        }
+
+
+    },
+
+    _areEarlyWorkersNeeded(room) {
+        const rcl1WorkersInRoom = room.find(FIND_MY_CREEPS, {
+            filter: creep => {
+                return creep.role === ROLE.EARLY_WORKER;
+            }
+        });
+
+        return rcl1WorkersInRoom.length >= _.sum(room.sources, source => source.earlyGameHarvesterCount);
+    },
+
+    _areScoutsNeeded(room) {
+        return _.filter(Game.creeps, creep => creep.role === ROLE.SCOUT).length < 2;
+    },
+
+    _spawnEarlyWorker(room, spawn) {
         let body;
         if (room.energyCapacityAvailable >= 750) {
             body = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
@@ -30,14 +43,20 @@ const spawnLogic = {
         } else {
             body = [WORK, CARRY, MOVE, MOVE];
         }
-        const memory = {role: ROLE.EARLY_CREEP};
+        const memory = {role: ROLE.EARLY_WORKER};
 
-        this.spawnCreep(spawn, body, memory)
+        this._spawnCreep(spawn, body, memory)
     },
 
-    spawnCreep(spawn, body, memory) {
-        const name = Memory.creepsBuilt.toString();
+    _spawnScout(room, spawn) {
+        let body = [MOVE];
+        const memory = {role: ROLE.SCOUT};
 
+        this._spawnCreep(spawn, body, memory)
+    },
+
+    _spawnCreep(spawn, body, memory) {
+        const name = Memory.creepsBuilt.toString();
         const result = spawn.spawnCreep(body, name, {memory: memory});
         switch (result) {
             case OK:

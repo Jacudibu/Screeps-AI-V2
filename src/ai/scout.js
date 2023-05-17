@@ -14,14 +14,14 @@ const scout = {
                     this._continueScouting(creep);
                 }
                 this.run(creep);
-                break;
+                return;
 
             case TASK.MOVE_TO_ROOM:
                 if (creep.moveToRoom({preferHighway: true, offRoad: true}) === TASK_RESULT.TARGET_REACHED) {
                     creep.setTask(TASK.DECIDE_WHAT_TO_DO, undefined);
                     this.run(creep);
                 }
-                break;
+                return;
 
             case TASK.SIGN_CONTROLLER:
                 this._signController(creep);
@@ -29,7 +29,8 @@ const scout = {
 
             default:
                 creep.setTask(TASK.DECIDE_WHAT_TO_DO);
-                break;
+                this.run(creep);
+                return;
         }
     },
 
