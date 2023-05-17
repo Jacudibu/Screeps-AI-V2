@@ -61,7 +61,7 @@ const scoutData = {
                 // owned Room lost its owner
                 Players.removeOwnedRoomFromPlayer(room, oldData.owner);
             }
-        } else if (newData.owner) {
+        } else if (newData && newData.owner) {
             // empty Room got claimed
             Players.addOwnedRoomToPlayer(room, newData.owner);
         }

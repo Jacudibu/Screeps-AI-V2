@@ -16,13 +16,14 @@ global.TASK_RESULT = {
 Creep.prototype.moveToRoom = function(options = undefined) {
     const roomName = this.targetRoomName;
 
-    if (this.room.name === roomName) {
-        return TASK_RESULT.TARGET_REACHED;
-    }
-
     const positionInNextRoom = new RoomPosition(25, 25, roomName);
     this.travelTo(positionInNextRoom, options);
-    return TASK_RESULT.CONTINUE_MOVING;
+
+    if (this.room.name === roomName) {
+        return TASK_RESULT.TARGET_REACHED;
+    } else {
+        return TASK_RESULT.CONTINUE_MOVING;
+    }
 };
 
 Creep.prototype.logActionError = function(action, errorCode) {
