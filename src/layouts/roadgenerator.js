@@ -49,7 +49,7 @@ const roadGenerator = {
         }
 
         if (room.mineral) {
-            hive.layout.roads.controller = this._getPathTo(hive, room, room.mineral, goals, roomCallback);
+            hive.layout.roads.mineral = this._getPathTo(hive, room, room.mineral, goals, roomCallback);
         }
     },
 
