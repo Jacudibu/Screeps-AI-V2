@@ -1,4 +1,4 @@
-const rcl1creep = {
+const earlyCreep = {
     run(creep) {
         switch (creep.task) {
             case TASK.HARVEST_ENERGY: return this._harvestEnergy(creep);
@@ -185,4 +185,5 @@ const rcl1creep = {
     }
 };
 
-module.exports = rcl1creep;
+module.exports = earlyCreep;
+profiler.registerObject(earlyCreep, "earlyCreep")

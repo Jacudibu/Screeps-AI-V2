@@ -24,3 +24,7 @@ Creep.prototype.moveToRoom = function(options = undefined) {
     this.travelTo(positionInNextRoom, options);
     return TASK_RESULT.CONTINUE_MOVING;
 };
+
+Creep.prototype.logActionError = function(action, errorCode) {
+    log.warning(this + " " + action + " resulted in unhandled error code " + errorCode)
+};

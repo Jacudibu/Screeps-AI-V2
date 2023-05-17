@@ -5,7 +5,14 @@ const scout = {
         switch (creep.task) {
             case TASK.DECIDE_WHAT_TO_DO:
                 creep.room.updateScoutData();
-                this._continueScouting(creep);
+                if (creep.room.controller) {
+                    const sign = creep.room.controller.sign;
+                    if (sign.username !== PLAYER_NAME) {
+                        creep.setTask(TASK.SIGN_CONTROLLER);
+                    }
+                } else {
+                    this._continueScouting(creep);
+                }
                 this.run(creep);
                 break;
 
@@ -16,8 +23,37 @@ const scout = {
                 }
                 break;
 
+            case TASK.SIGN_CONTROLLER:
+                this._signController(creep);
+                return;
+
             default:
                 creep.setTask(TASK.DECIDE_WHAT_TO_DO);
+                break;
+        }
+    },
+
+    _signController(creep) {
+        if (creep.room.controller === undefined) {
+            this._continueScouting();
+            this.run(creep);
+            return;
+        }
+
+        const text = creep.room.controller.owner === PLAYER_NAME
+            ? "Time to test this new codebase in production \o/"
+            : creepTalk.cookie;
+
+        switch (creep.signController(creep.room.controller, text)) {
+            case OK:
+                this._continueScouting();
+                break;
+            case ERR_NOT_IN_RANGE:
+                this.travelTo(this.room.controller, {maxRooms: 1});
+                break;
+            default:
+                this._continueScouting();
+                this.logActionError("signing controller", this.signController(this.room.controller, ""));
                 break;
         }
     },

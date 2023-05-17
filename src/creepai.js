@@ -1,5 +1,5 @@
 const ai = {
-    [ROLE.EARLY_CREEP]: require('ai/rcl1creep'),
+    [ROLE.EARLY_CREEP]: require('ai/earlycreep'),
     [ROLE.SCOUT]: require('ai/scout'),
 };
 
