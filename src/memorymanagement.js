@@ -23,13 +23,11 @@ const memoryManagement = {
             log.warning("====== Respawn detected ======");
             Memory.creeps = {};
             Memory.spawns = {};
-            // Memory.rooms = {}; // We still enjoy our old scout data :^)
+            Memory.rooms = {}; // Technically we don't need to delete old scout data!
             Memory.flags = {};
             Memory.hives = {};
 
-            if (Memory.players === undefined) {
-                Memory.players = {}
-            }
+            Memory.players = {} // Technically we don't need to reset playerdata. That way our AI could hold grudges beyond it's death!
             Memory.portals = {}
 
             Memory.creepsBuilt = 0;

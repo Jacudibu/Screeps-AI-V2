@@ -17,9 +17,9 @@ class Utils {
         }
 
         return result;
-    }
+    };
 
-    static countFreeTilesAroundRoomObject = function(roomObject) {
+    static countFreeTilesAroundRoomObject(roomObject) {
         const terrain = roomObject.room.getTerrain();
         let freeTileCount = 0;
         [roomObject.pos.x - 1, roomObject.pos.x, roomObject.pos.x + 1].forEach(x => {

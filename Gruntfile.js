@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     let config = require('./.secrets.json');
-    let branch = "sim"
+    let branch = "main"
     let email = grunt.option('email') || config.email;
     let token = grunt.option('token') || config.token;
 
