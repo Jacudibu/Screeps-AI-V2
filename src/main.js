@@ -17,7 +17,6 @@ const memoryCache = require('tools/memorycache')
 require('prototypes/creep/properties')
 require('prototypes/creep/setTask')
 require('prototypes/room/checkforrclupdate')
-require('prototypes/room/layout')
 require('prototypes/room/mineral')
 require('prototypes/room/sources')
 require('prototypes/room/structurecache')
@@ -29,12 +28,12 @@ require('prototypes/structure/canstillstoreenergy')
 require('utils')
 
 const memoryManagement = require('memorymanagement')
-const roomLogic = require("roomai");
+const hiveMind = require("hivelogic/hivemind");
 const creepAi = require("creepai");
 
 log.warning("====== Global reset registered ======");
 module.exports.loop = memoryCache(function() {
     memoryManagement.run();
-    roomLogic.run()
+    hiveMind.run()
     creepAi.run();
 });

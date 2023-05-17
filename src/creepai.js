@@ -1,5 +1,5 @@
 const ai = {
-    [ROLE.RCL1_CREEP]: require('ai/creeps/rcl1creep'),
+    [ROLE.RCL1_CREEP]: require('ai/rcl1creep'),
 };
 
 const creepAI = {

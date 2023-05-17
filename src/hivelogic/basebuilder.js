@@ -22,7 +22,7 @@ const STRUCTURE_PRIORITY_ORDER = [
     STRUCTURE_FACTORY,
 ];
 
-function placePlannedConstructionSite(room) {
+function placePlannedConstructionSite(hive, room) {
     if (room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
         return;
     }
@@ -31,7 +31,7 @@ function placePlannedConstructionSite(room) {
         return;
     }
 
-    const didPlaceSomething = placeConstructionSiteIfNeeded(room);
+    const didPlaceSomething = placeConstructionSiteIfNeeded(hive.layout, room);
     if (didPlaceSomething && room.memory.rcl < 4) {
         for (const creep of room.find(FIND_MY_CREEPS, {filter: creep => creep.role === ROLE.RCL1_CREEP && creep.task === TASK.UPGRADE_CONTROLLER})) {
             creep.setTask(TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES, undefined);
@@ -39,23 +39,21 @@ function placePlannedConstructionSite(room) {
     }
 }
 
-function placeConstructionSiteIfNeeded(room) {
+function placeConstructionSiteIfNeeded(layout, room) {
     for (let i = 0; i < STRUCTURE_PRIORITY_ORDER.length; i++) {
         if (STRUCTURE_PRIORITY_ORDER[i] === STRUCTURE_ROAD && room.memory.rcl < 4) {
             return false;
         }
 
-        if (canStructureBeBuilt(room, STRUCTURE_PRIORITY_ORDER[i])) {
-            return placeConstructionSite(room, STRUCTURE_PRIORITY_ORDER[i]);
+        if (canStructureBeBuilt(layout, room, STRUCTURE_PRIORITY_ORDER[i])) {
+            return placeConstructionSite(layout, room, STRUCTURE_PRIORITY_ORDER[i]);
         }
     }
 
     return false;
 }
 
-function canStructureBeBuilt(room, structureType) {
-    const layout = room.layout;
-
+function canStructureBeBuilt(layout, room, structureType) {
     if (layout[structureType] === undefined) {
         return false;
     }
@@ -73,9 +71,7 @@ function canStructureBeBuilt(room, structureType) {
     return true;
 }
 
-function placeConstructionSite(room, structureType) {
-    const layout = room.layout;
-
+function placeConstructionSite(layout, room, structureType) {
     for (const position of layout[structureType]) {
         if (!isStructureConstructableAt(room, structureType, position)) {
             continue;

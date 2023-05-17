@@ -1,23 +1,21 @@
-const baseBuilder = require('ai/rooms/basebuilder')
-const spawnLogic = require('ai/rooms/spawnlogic');
+require('hivelogic/hive')
+const baseBuilder = require('hivelogic/basebuilder')
+const spawnLogic = require('hivelogic/spawnlogic');
 
 const DEBUG_ROOM_LAYOUTS = true;
 
-const ownedRoom = {
+const hiveMind = {
     run() {
-        for (let roomName in Game.rooms) {
-            let room = Game.rooms[roomName];
-            if (room.controller && room.controller.my) {
-                this._tryRunRoomLogic(room);
-            }
+        for (const hiveRoomName in Hives) {
+            this._tryRunHiveLogic(Hives[hiveRoomName]);
         }
     },
 
-    _tryRunRoomLogic(room) {
+    _tryRunHiveLogic(hive) {
         try {
-            this._runRoomLogic(room);
+            this._runHiveLogic(hive);
         } catch (e) {
-            let message = room + " -> caught error: " + e;
+            let message = hive + " -> caught error: " + e;
             if (e.stack) {
                 message += "\nTrace:\n" + e.stack;
             }
@@ -25,16 +23,23 @@ const ownedRoom = {
         }
     },
 
-    _runRoomLogic: function(room) {
+    _runHiveLogic(hive) {
+        const room = hive.room;
+        if (room === undefined) {
+            log.warning("Lost hivelogic in room " + room);
+            delete Hives[hive.roomName]
+            return;
+        }
+
         if (room.checkForRCLUpdate()) {
-            if (room.layout.core === undefined) {
-                log.info(room + "Generating room layout for respawn room.")
-                room.layout.core = layouts.processor.generateRoomLayoutForRespawnRoom(room);
+            if (hive.layout.core === undefined) {
+                log.info(hive + "Generating room layout for respawn room.")
+                hive.layout.core = layouts.processor.generateRoomLayoutForRespawnRoom(room);
             }
         }
 
         spawnLogic.run(room);
-        baseBuilder.placePlannedConstructionSite(room);
+        baseBuilder.placePlannedConstructionSite(hive, room);
 
         const hostiles = room.find(FIND_HOSTILE_CREEPS);
         if (hostiles.length > 0) {
@@ -43,10 +48,10 @@ const ownedRoom = {
             }
         }
 
-        layouts.processor.generateRoadsToSources(room);
+        layouts.processor.generateHiveRoads(hive, room);
 
         if (DEBUG_ROOM_LAYOUTS) {
-            this._draw(room.visual, room.layout);
+            this._draw(room.visual, hive.layout);
         }
     },
 
@@ -88,5 +93,5 @@ const ownedRoom = {
     }
 }
 
-profiler.registerObject(ownedRoom, "roomAI");
-module.exports = ownedRoom;
+profiler.registerObject(hiveMind, "hiveMind");
+module.exports = hiveMind;

@@ -112,8 +112,8 @@ global.layouts.processor = {
         };
     },
 
-    generateRoadsToSources(room) {
-        roadGenerator.findRoadPath(room);
+    generateHiveRoads(hive, room) {
+        roadGenerator.generateHiveRoads(hive, room);
     }
 }
 
