@@ -75,26 +75,20 @@ const roadGenerator = {
 
     _isRoadAlreadyPartOfLayout(hive, pos) {
         if (this._isRoadAlreadyPartOfArray(hive.layout.core.roads, pos)) {
-            log.info(JSON.stringify(pos) + " - part of core" )
             return true;
         }
 
-        let i = 0;
         for (const sourceRoads of hive.layout.roads.sources) {
             if (this._isRoadAlreadyPartOfArray(sourceRoads, pos)) {
-                log.info(JSON.stringify(pos) + " - part of sources[" + i + "]" )
                 return true;
             }
-            i++;
         }
 
         if (this._isRoadAlreadyPartOfArray(hive.layout.roads.controller, pos)) {
-            log.info(JSON.stringify(pos) + " - part of controller" )
             return true;
         }
 
         if (this._isRoadAlreadyPartOfArray(hive.layout.roads.mineral, pos)) {
-            log.info(JSON.stringify(pos) + " - part of mineral" )
             return true;
         }
 
