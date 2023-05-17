@@ -46,30 +46,46 @@ const ownedRoom = {
         layouts.processor.generateRoadsToSources(room);
 
         if (DEBUG_ROOM_LAYOUTS) {
-            const opts = {opacity: 0.2};
-            for (const structureType in room.layout.core) {
-                for (const pos of room.layout.core[structureType]) {
-                    room.visual.structure(pos.x, pos.y, structureType, opts);
-                }
-            }
-
-            for (const i in room.layout.roads.sources) {
-                for (const pos of room.layout.roads.sources[i]) {
-                    room.visual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
-                }
-            }
-
-            for (const pos of room.layout.roads.controller) {
-                room.visual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
-            }
-
-            for (const pos of room.layout.roads.mineral) {
-                room.visual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
-            }
-
-            room.visual.connectRoads(opts);
+            this._draw(room.visual, room.layout);
         }
     },
+
+    _draw(roomVisual, layout) {
+        const opts = {opacity: 0.2};
+        if (layout.core) {
+            for (const structureType in layout.core) {
+                for (const pos of layout.core[structureType]) {
+                    roomVisual.structure(pos.x, pos.y, structureType, opts);
+                }
+            }
+        }
+
+        if (layout.roads === undefined) {
+            return;
+        }
+
+        if (layout.roads.sources) {
+            for (const i in layout.roads.sources) {
+                for (const pos of layout.roads.sources[i]) {
+                    roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
+                }
+            }
+        }
+
+        if (layout.roads.controller) {
+            for (const pos of layout.roads.controller) {
+                roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
+            }
+        }
+
+        if (layout.roads.mineral) {
+            for (const pos of layout.roads.mineral) {
+                roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
+            }
+        }
+
+        roomVisual.connectRoads(opts);
+    }
 }
 
 profiler.registerObject(ownedRoom, "roomAI");

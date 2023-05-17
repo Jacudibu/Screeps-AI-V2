@@ -39,7 +39,6 @@ const roadGenerator = {
 
         room.layout.roads = {};
         room.layout.roads.sources = [];
-        // TODO: Filter out duplicate roads
         for (const i in room.sources) {
             const path = this._getPathTo(room, room.sources[i], goals, roomCallback);
             room.layout.roads.sources.push(path);
@@ -64,10 +63,48 @@ const roadGenerator = {
 
         const path = [];
         for (const pos of result.path) {
+            if (this._isRoadAlreadyPartOfLayout(room, pos)) {
+                continue;
+            }
+
             path.push({x: pos.x, y: pos.y});
             costMatrixCache[room.name].set(pos.x, pos.y, COST_ROAD);
         }
         return path;
+    },
+
+    _isRoadAlreadyPartOfLayout(hive, pos) {
+        if (this._isRoadAlreadyPartOfArray(hive.layout.core.roads, pos)) {
+            log.info(JSON.stringify(pos) + " - part of core" )
+            return true;
+        }
+
+        let i = 0;
+        for (const sourceRoads of hive.layout.roads.sources) {
+            if (this._isRoadAlreadyPartOfArray(sourceRoads, pos)) {
+                log.info(JSON.stringify(pos) + " - part of sources[" + i + "]" )
+                return true;
+            }
+            i++;
+        }
+
+        if (this._isRoadAlreadyPartOfArray(hive.layout.roads.controller, pos)) {
+            log.info(JSON.stringify(pos) + " - part of controller" )
+            return true;
+        }
+
+        if (this._isRoadAlreadyPartOfArray(hive.layout.roads.mineral, pos)) {
+            log.info(JSON.stringify(pos) + " - part of mineral" )
+            return true;
+        }
+
+        // TODO: Remotes
+
+        return false;
+    },
+
+    _isRoadAlreadyPartOfArray(existingRoads, pos) {
+        return _.some(existingRoads, existingRoadPos => existingRoadPos.x === pos.x && existingRoadPos.y === pos.y);
     },
 
     _roomCallback(targetRoom, callbackRoomName) {
@@ -79,10 +116,18 @@ const roadGenerator = {
         if (callbackRoomName === targetRoom.name) {
             room = targetRoom;
             for (const structureType of STRUCTURES_WHICH_BLOCK_PATHING) {
-                this._setCostsForArrayIfItExists(costMatrix, targetRoom.layout.core, structureType, COST_NOT_WALKABLE);
+                this._setCostsForArrayIfKeyExists(costMatrix, targetRoom.layout.core, structureType, COST_NOT_WALKABLE);
             }
 
-            this._setCostsForArrayIfItExists(costMatrix, targetRoom.layout.core, STRUCTURE_ROAD, COST_ROAD);
+            this._setCostsForArrayIfKeyExists(costMatrix, targetRoom.layout.core, STRUCTURE_ROAD, COST_ROAD);
+            if (targetRoom.layout.roads) {
+                for (const source of targetRoom.layout.roads.sources) {
+                    this._setCostsForArray(source, costMatrix, COST_ROAD);
+                }
+
+                this._setCostsForArrayIfKeyExists(costMatrix, targetRoom.layout.roads, "controller", COST_ROAD);
+                this._setCostsForArrayIfKeyExists(costMatrix, targetRoom.layout.roads, "mineral", COST_ROAD);
+            }
         } else {
             // Do the same but with room.remotes[roomName]
             room = Game.rooms[targetRoom];
@@ -99,11 +144,15 @@ const roadGenerator = {
         return costMatrix;
     },
 
-    _setCostsForArrayIfItExists(costMatrix, layoutObject, elementName, cost) {
+    _setCostsForArrayIfKeyExists(costMatrix, layoutObject, elementName, cost) {
         if (layoutObject[elementName]) {
-            for (const pos of layoutObject[elementName]) {
-                costMatrix.set(pos.x, pos.y, cost)
-            }
+            this._setCostsForArray(layoutObject[elementName], costMatrix, cost);
+        }
+    },
+
+    _setCostsForArray(posArray, costMatrix, cost) {
+        for (const pos of posArray) {
+            costMatrix.set(pos.x, pos.y, cost)
         }
     },
 
