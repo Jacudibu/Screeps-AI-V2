@@ -7,7 +7,7 @@ const scout = {
                 creep.room.updateScoutData();
                 if (creep.room.controller) {
                     const sign = creep.room.controller.sign;
-                    if (sign !== undefined && sign.username !== PLAYER_NAME) {
+                    if (sign === undefined || sign.username !== PLAYER_NAME) {
                         creep.setTask(TASK.SIGN_CONTROLLER, undefined);
                         return;
                     }
@@ -27,6 +27,9 @@ const scout = {
                 this._signController(creep);
                 return;
 
+            case TASK.IDLE:
+                return;
+
             default:
                 creep.setTask(TASK.DECIDE_WHAT_TO_DO);
                 this.run(creep);
@@ -41,37 +44,32 @@ const scout = {
             return;
         }
 
-        const text = creep.room.controller.owner === PLAYER_NAME
+        const owner = creep.room.controller.owner;
+        const text = owner !== undefined && owner.username === PLAYER_NAME
             ? "Hello world! Time to test this my codebase in production \o/"
             : creepTalk.cookie;
 
         switch (creep.signController(creep.room.controller, text)) {
             case OK:
-                this._continueScouting();
+                this._continueScouting(creep);
                 break;
             case ERR_NOT_IN_RANGE:
-                this.travelTo(this.room.controller, {maxRooms: 1});
+                creep.travelTo(creep.room.controller, {maxRooms: 1});
                 break;
             default:
-                this._continueScouting();
-                this.logActionError("signing controller", this.signController(this.room.controller, ""));
+                this._continueScouting(creep);
+                this.logActionError("signing controller", this.signController(creep.room.controller, ""));
                 break;
         }
     },
 
     _continueScouting(creep) {
-        this._selectNextScoutRoom(creep);
-        creep.setTask(TASK.MOVE_TO_ROOM);
+        this._selectNextRoomToScout(creep);
+        this.run(creep);
     },
 
-    _selectNextScoutRoom(creep) {
-        this._selectNextRoomToScout();
-        creep.setTask(TASK.MOVE_TO_ROOM);
-        creep.moveToRoom(TASK.DECIDE_WHAT_TO_DO);
-    },
-
-    _selectNextRoomToScout() {
-        const exits = Game.map.describeExits(this.room.name);
+    _selectNextRoomToScout(creep) {
+        const exits = Game.map.describeExits(creep.room.name);
         const availableRooms = [];
 
         for (let direction in exits) {
@@ -106,8 +104,13 @@ const scout = {
             }
         }
 
-        if (!targetRoom) {
-            targetRoom = availableRooms[_.random(0, availableRooms.length - 1)];
+        if (targetRoom === undefined) {
+            if (availableRooms.length > 0) {
+                targetRoom = availableRooms[_.random(0, availableRooms.length - 1)];
+            } else { // must be sim.
+                creep.setTask(TASK.IDLE)
+                return;
+            }
         }
 
         if (!Memory.rooms[targetRoom]) {
@@ -116,6 +119,8 @@ const scout = {
 
         Memory.rooms[targetRoom].isScoutOnRoute = true;
         this.targetRoomName = targetRoom;
+
+        creep.setTask(TASK.MOVE_TO_ROOM);
     }
 };
 
