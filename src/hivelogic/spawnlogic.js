@@ -14,7 +14,7 @@ const spawnLogic = {
     spawnRCL1Worker(room, spawn) {
         const rcl1WorkersInRoom = room.find(FIND_MY_CREEPS, {
             filter: creep => {
-                return creep.role === ROLE.RCL1_CREEP;
+                return creep.role === ROLE.EARLY_CREEP;
             }
         });
 
@@ -30,7 +30,7 @@ const spawnLogic = {
         } else {
             body = [WORK, CARRY, MOVE, MOVE];
         }
-        const memory = {role: ROLE.RCL1_CREEP};
+        const memory = {role: ROLE.EARLY_CREEP};
 
         this.spawnCreep(spawn, body, memory)
     },

@@ -16,7 +16,7 @@ require('layouts/processor')
 const memoryCache = require('tools/memorycache')
 
 require('prototypes/creep/properties')
-require('prototypes/creep/setTask')
+require('prototypes/creep/tasks')
 require('prototypes/room/checkforrclupdate')
 require('prototypes/room/mineral')
 require('prototypes/room/sources')
@@ -31,6 +31,8 @@ require('utils')
 const memoryManagement = require('memorymanagement')
 const hiveMind = require("hivelogic/hivemind");
 const creepAi = require("creepai");
+
+global.PLAYER_NAME = "Jacudibu";
 
 module.exports.loop = memoryCache(function() {
     if (Game.cpu.bucket === 10000) {

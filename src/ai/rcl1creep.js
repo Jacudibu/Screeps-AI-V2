@@ -108,7 +108,7 @@ const rcl1creep = {
     },
 
     _getBestSource(creep) {
-        const allRCL1Workers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.RCL1_CREEP});
+        const allRCL1Workers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.EARLY_CREEP});
         const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
 
         for (let i = 0; i < sources.length; i++) {

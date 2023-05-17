@@ -1,3 +1,5 @@
-global.ROLE = {};
+global.ROLE = {
+    EARLY_CREEP: "early",
+    SCOUT: "scout",
+};
 
-global.ROLE.RCL1_CREEP = "rcl1";

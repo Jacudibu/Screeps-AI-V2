@@ -1,12 +1,14 @@
 const propertyStrings = [
     "role",
     "task",
-    "taskTargetId"
+    "taskTargetId",
+    "targetRoomName"
 ];
 
 Creep.prototype.role = undefined;
 Creep.prototype.task = undefined;
 Creep.prototype.taskTargetId = undefined;
+Creep.prototype.targetRoomName = undefined;
 
 const addProperty = function(propertyName) {
     Object.defineProperty(Creep.prototype, propertyName, {

@@ -27,6 +27,11 @@ const memoryManagement = {
             Memory.flags = {};
             Memory.hives = {};
 
+            if (Memory.players === undefined) {
+                Memory.players = {}
+            }
+            Memory.portals = {}
+
             Memory.creepsBuilt = 0;
             Memory.globalTick = Game.time;
             Memory.respawnTick = Game.time;

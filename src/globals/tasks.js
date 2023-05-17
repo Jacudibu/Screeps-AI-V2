@@ -1,7 +1,9 @@
-global.TASK = {};
-
-global.TASK.BUILD = 'build';
-global.TASK.DEPOSIT_ENERGY = 'deposit_energy';
-global.TASK.HARVEST_ENERGY = 'harvest_energy';
-global.TASK.UPGRADE_CONTROLLER = 'upgrade_controller';
-global.TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES = 'upgrade_controller_lookout';
+global.TASK = {
+    BUILD: "build",
+    DECIDE_WHAT_TO_DO: "decide",
+    DEPOSIT_ENERGY: "deposit_energy",
+    HARVEST_ENERGY: "harvest_energy",
+    MOVE_TO_ROOM: "upgrade_controller",
+    UPGRADE_CONTROLLER: "upgrade_controller",
+    UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES: "upgrade_controller_lookout",
+}
