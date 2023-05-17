@@ -8,7 +8,7 @@ class Hive {
         this._roomName = roomName;
 
         if (!Memory.hives[roomName]) {
-            log.info("New hivelogic established in " + this.room + "!");
+            log.info("A new hive has been established in " + this.room + "!");
             Memory.hives[roomName] = {layout: {}};
         }
 
@@ -49,6 +49,10 @@ class Hive {
         } else {
             delete this.memory.layout;
         }
+    }
+
+    toString() {
+        return "Hive@" + this.room.toString();
     }
 }
 

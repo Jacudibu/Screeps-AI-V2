@@ -1,11 +1,6 @@
 Room.prototype.checkForRCLUpdate = function() {
     if (this.memory.rcl === undefined) {
         this.memory.rcl = this.controller.level;
-
-        if (this.controller.level === 1) {
-            log.info(this + " new room established!");
-        }
-
         return true;
     }
 
