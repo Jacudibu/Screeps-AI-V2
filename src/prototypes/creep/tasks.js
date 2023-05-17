@@ -8,7 +8,7 @@ Creep.prototype.resetTask = function() {
     this.task = undefined;
 }
 
-const TASK_RESULT = {
+global.TASK_RESULT = {
     TARGET_REACHED: 100,
     CONTINUE_MOVING: 101,
 }

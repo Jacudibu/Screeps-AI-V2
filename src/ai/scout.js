@@ -75,7 +75,7 @@ const scout = {
         for (let direction in exits) {
             const roomName = exits[direction];
 
-            if (Game.map.isRoomAvailable(roomName)) {
+            if (Game.map.getRoomStatus(roomName).status === "normal") { // TODO: What if we are in a respawn zone?
                 availableRooms.push(roomName);
             }
         }
@@ -118,7 +118,7 @@ const scout = {
         }
 
         Memory.rooms[targetRoom].isScoutOnRoute = true;
-        this.targetRoomName = targetRoom;
+        creep.targetRoomName = targetRoom;
 
         creep.setTask(TASK.MOVE_TO_ROOM);
     }
