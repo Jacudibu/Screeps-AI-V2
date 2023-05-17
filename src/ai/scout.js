@@ -13,7 +13,6 @@ const scout = {
                     }
                 }
                 this._continueScouting(creep);
-                this.run(creep);
                 return;
 
             case TASK.MOVE_TO_ROOM:
@@ -40,13 +39,12 @@ const scout = {
     _signController(creep) {
         if (creep.room.controller === undefined) {
             this._continueScouting();
-            this.run(creep);
             return;
         }
 
         const owner = creep.room.controller.owner;
         const text = owner !== undefined && owner.username === PLAYER_NAME
-            ? "Hello world! Time to test this my codebase in production \o/"
+            ? "Hello world! Time to test this my codebase in production \\o/"
             : creepTalk.cookie;
 
         switch (creep.signController(creep.room.controller, text)) {

@@ -14,7 +14,20 @@ const memoryManagement = {
                 continue;
             }
 
+            this._deleteRoleSpecificStuff(Memory.creeps[creepName]);
             delete Memory.creeps[creepName];
+        }
+    },
+
+    _deleteRoleSpecificStuff(creepMemory) {
+        switch (creepMemory.role) {
+            case ROLE.SCOUT:
+                if (creepMemory.task === TASK.MOVE_TO_ROOM) {
+                    delete Memory.rooms[creepMemory.targetRoomName].isScoutOnRoute;
+                }
+                break;
+            default:
+                break;
         }
     },
 
