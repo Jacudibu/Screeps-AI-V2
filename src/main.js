@@ -33,7 +33,7 @@ const hiveMind = require("hivelogic/hivemind");
 const creepAi = require("creepai");
 
 module.exports.loop = memoryCache(function() {
-    if(Game.cpu.bucket === 10000) {
+    if (Game.cpu.bucket === 10000) {
         Game.cpu.generatePixel();
     }
 
