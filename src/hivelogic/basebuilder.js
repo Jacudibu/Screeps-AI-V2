@@ -45,8 +45,8 @@ function placeConstructionSiteIfNeeded(layout, room) {
             return false;
         }
 
-        if (canStructureBeBuilt(layout, room, STRUCTURE_PRIORITY_ORDER[i])) {
-            return placeConstructionSite(layout, room, STRUCTURE_PRIORITY_ORDER[i]);
+        if (canStructureBeBuilt(layout.core, room, STRUCTURE_PRIORITY_ORDER[i])) {
+            return placeConstructionSite(layout.core, room, STRUCTURE_PRIORITY_ORDER[i]);
         }
     }
 
