@@ -15,12 +15,12 @@ class Hive {
         Hives[this.roomName] = this;
     }
 
-    // The name of this hivelogic's room.
+    // The name of this hive's room.
     get roomName() {
         return this._roomName;
     }
 
-    // The Game.room this hivelogic is located in.
+    // The Game.room this hive is located in.
     get room() {
         return Game.rooms[this.roomName];
     }
@@ -38,7 +38,7 @@ class Hive {
         }
     }
 
-    // The layout for this hivelogic's room.
+    // The layout for this hive's room.
     get layout() {
         return this.memory.layout;
     }
@@ -48,6 +48,19 @@ class Hive {
             this.memory.layout = value;
         } else {
             delete this.memory.layout;
+        }
+    }
+
+    // The remotes available to this hive's room.
+    get remotes() {
+        return this.memory.remotes;
+    }
+
+    set remotes(value) {
+        if (value) {
+            this.memory.remotes = value;
+        } else {
+            delete this.memory.remotes;
         }
     }
 
