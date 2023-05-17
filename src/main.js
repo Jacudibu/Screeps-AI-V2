@@ -5,6 +5,7 @@ require('tools/roomvisual')
 require('clienthacks/clickabletostring')
 
 require('tools/logger')
+require('tools/hasrespawned')
 
 require('globals/creeptalk')
 require('globals/roles')
@@ -31,7 +32,6 @@ const memoryManagement = require('memorymanagement')
 const hiveMind = require("hivelogic/hivemind");
 const creepAi = require("creepai");
 
-log.warning("====== Global reset registered ======");
 module.exports.loop = memoryCache(function() {
     memoryManagement.run();
     hiveMind.run()

@@ -54,28 +54,24 @@ class Hive {
     toString() {
         return "Hive@" + this.room.toString();
     }
-}
 
-if (Memory.hives === undefined) {
-    Memory.hives = {};
-
-    if (Game.spawns.length > 1) {
-        log.error("Hive memory was reset, which should only ever happen on manual respawn, but there is more than one spawn?")
-    }
-
-    for (const spawnName in Game.spawns) {
-        const spawn = Game.spawns[spawnName];
-        if (Hives[spawn.room.name] === undefined) {
-            new Hive(spawn.room.name);
-        } else {
-            log.error("Encountered multiple spawns in the same room during respawn hivelogic generation...? " + spawn.room);
+    static onRespawn() {
+        for (const spawnName in Game.spawns) {
+            const spawn = Game.spawns[spawnName];
+            if (Hives[spawn.room.name] === undefined) {
+                new Hive(spawn.room.name);
+            }
         }
     }
-} else {
-    for (const hiveRoom in Memory.hives) {
-        new Hive(hiveRoom);
+
+    static onGlobalReset() {
+        for (const hiveRoom in Memory.hives) {
+            new Hive(hiveRoom);
+        }
     }
 }
+
+Hive.onGlobalReset();
 
 module.exports = Hive;
 profiler.registerClass(Hive, "Hive")

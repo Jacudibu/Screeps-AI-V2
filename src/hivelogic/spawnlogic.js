@@ -36,10 +36,6 @@ const spawnLogic = {
     },
 
     spawnCreep(spawn, body, memory) {
-        if (!Memory.creepsBuilt) {
-            log.warning("Memory.creepsBuilt was not defined? Did we wipe memory?")
-            Memory.creepsBuilt = 0;
-        }
         const name = Memory.creepsBuilt.toString();
 
         const result = spawn.spawnCreep(body, name, {memory: memory});

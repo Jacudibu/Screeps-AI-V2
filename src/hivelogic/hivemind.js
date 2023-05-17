@@ -1,4 +1,3 @@
-require('hivelogic/hive')
 const baseBuilder = require('hivelogic/basebuilder')
 const spawnLogic = require('hivelogic/spawnlogic');
 
