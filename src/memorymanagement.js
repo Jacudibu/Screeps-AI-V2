@@ -21,19 +21,20 @@ const memoryManagement = {
     _detectRespawn() {
         if (hasRespawned()) {
             log.warning("====== Respawn detected ======");
-            Memory.creeps = {};
-            Memory.spawns = {};
-            Memory.rooms = {}; // Technically we don't need to delete old scout data!
-            Memory.flags = {};
-            Memory.hives = {};
+            Memory = {
+                creeps: {},
+                spawns: {},
+                rooms: {}, // Technically we don't need to delete old scout data!
+                flags: {},
+                hives: {},
 
-            Memory.players = {} // Technically we don't need to reset playerdata. That way our AI could hold grudges beyond it's death!
-            Memory.portals = {}
+                players: {}, // Technically we don't need to reset playerdata. That way our AI could hold grudges beyond it's death!
+                portals: {},
 
-            Memory.creepsBuilt = 0;
-            Memory.globalTick = Game.time;
-            Memory.respawnTick = Game.time;
-
+                creepsBuilt: 0,
+                globalTick: Game.time,
+                respawnTick: Game.time,
+            }
             Hive.onRespawn();
         }
     },

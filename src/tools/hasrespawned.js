@@ -27,7 +27,11 @@
  *                - improved performance of creep number check (https://jsperf.com/isempty-vs-isemptyobject/23)
  */global.hasRespawned = function hasRespawned(){
     // check for multiple calls on same tick
-    if(Memory.respawnTick && Memory.respawnTick === Game.time) {
+    if (Memory.respawnTick === undefined) {
+        return true;
+    }
+
+    if(Memory.respawnTick === Game.time) {
         return true;
     }
 
