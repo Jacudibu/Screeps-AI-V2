@@ -41,7 +41,7 @@ const scout = {
         }
 
         const text = creep.room.controller.owner === PLAYER_NAME
-            ? "Time to test this new codebase in production \o/"
+            ? "Hello world! Time to test this my codebase in production \o/"
             : creepTalk.cookie;
 
         switch (creep.signController(creep.room.controller, text)) {
