@@ -108,12 +108,12 @@ const earlyCreep = {
     },
 
     _getBestSource(creep) {
-        const allRCL1Workers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.EARLY_WORKER});
+        const allEarlyWorks = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.EARLY_WORKER});
         const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
 
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];
-            const creepsAssignedToSource = utils.count(allRCL1Workers, creep => creep.taskTargetId === source.id);
+            const creepsAssignedToSource = utils.count(allEarlyWorks, creep => creep.taskTargetId === source.id);
 
             if (creepsAssignedToSource < source.earlyGameHarvesterCount){
                 return source;

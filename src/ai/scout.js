@@ -7,12 +7,12 @@ const scout = {
                 creep.room.updateScoutData();
                 if (creep.room.controller) {
                     const sign = creep.room.controller.sign;
-                    if (sign.username !== PLAYER_NAME) {
-                        creep.setTask(TASK.SIGN_CONTROLLER);
+                    if (sign !== undefined && sign.username !== PLAYER_NAME) {
+                        creep.setTask(TASK.SIGN_CONTROLLER, undefined);
+                        return;
                     }
-                } else {
-                    this._continueScouting(creep);
                 }
+                this._continueScouting(creep);
                 this.run(creep);
                 return;
 

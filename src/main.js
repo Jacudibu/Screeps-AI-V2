@@ -19,6 +19,7 @@ require('prototypes/creep/properties')
 require('prototypes/creep/tasks')
 require('prototypes/room/checkforrclupdate')
 require('prototypes/room/mineral')
+require('prototypes/room/scoutdata')
 require('prototypes/room/sources')
 require('prototypes/room/structurecache')
 require('prototypes/room/tasks')
@@ -27,6 +28,7 @@ require('prototypes/source/earlygameharvestercount')
 require('prototypes/structure/canstillstoreenergy')
 
 require('utils')
+require('players')
 
 const memoryManagement = require('memorymanagement')
 const hiveMind = require("hivelogic/hivemind");

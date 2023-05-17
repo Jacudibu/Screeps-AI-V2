@@ -15,19 +15,18 @@ const spawnLogic = {
 
         if (this._areScoutsNeeded(room)) {
             this._spawnScout(room, idleSpawn);
+            return;
         }
-
-
     },
 
     _areEarlyWorkersNeeded(room) {
-        const rcl1WorkersInRoom = room.find(FIND_MY_CREEPS, {
+        const earlyWorkersInRoom = room.find(FIND_MY_CREEPS, {
             filter: creep => {
                 return creep.role === ROLE.EARLY_WORKER;
             }
         });
 
-        return rcl1WorkersInRoom.length >= _.sum(room.sources, source => source.earlyGameHarvesterCount);
+        return earlyWorkersInRoom.length <= _.sum(room.sources, source => source.earlyGameHarvesterCount);
     },
 
     _areScoutsNeeded(room) {
