@@ -12,7 +12,6 @@ require('globals/roles')
 require('globals/tasks')
 require('globals/utility')
 
-require('layouts/processor')
 const memoryCache = require('tools/memorycache')
 
 require('prototypes/creep/properties')

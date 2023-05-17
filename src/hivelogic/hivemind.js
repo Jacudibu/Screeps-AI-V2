@@ -1,5 +1,6 @@
 const baseBuilder = require('hivelogic/basebuilder')
 const spawnLogic = require('hivelogic/spawnlogic');
+require('hivelogic/layouts/processor')
 
 const DEBUG_ROOM_LAYOUTS = true;
 

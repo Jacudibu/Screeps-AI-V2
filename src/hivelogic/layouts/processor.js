@@ -1,4 +1,4 @@
-const roadGenerator = require("layouts/roadgenerator")
+const roadGenerator = require("hivelogic/layouts/roadgenerator")
 
 global.layouts = {};
 global.layouts.processor = {
