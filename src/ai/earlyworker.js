@@ -5,11 +5,11 @@ const earlyWorker = {
                 if (creep.moveToRoom() === TASK_RESULT.TARGET_REACHED) {
                     if (creep.room.name === creep.origin) {
                         this._figureOutHowToUseEnergy(creep);
+                        this.run(creep);
                     } else {
                         creep.setTask(TASK.HARVEST_REMOTE_ENERGY);
                         this._harvestRemoteEnergy(creep);
                     }
-                    this.run();
                 }
                 return;
             case TASK.HARVEST_ENERGY: return this._harvestEnergy(creep);
