@@ -47,11 +47,21 @@ const hiveMind = {
 
         const hostiles = room.find(FIND_HOSTILE_CREEPS);
         if (hostiles.length > 0) {
+            for (const creep of hostiles) {
+                if (creep.owner === undefined || creep.owner.username === "Invader") {
+                    continue;
+                }
+                if (_.any(creep.body, b => b.type === ATTACK || b.type === WORK || b.type === RANGED_ATTACK)) {
+                    if (room.controller.safeModeCooldown === 0 && room.controller.safeModeAvailable > 0) {
+                        room.controller.activateSafeMode();
+                    }
+                }
+            }
+
             for (const tower of room.myTowers) {
                 tower.attack(hostiles[0])
             }
         }
-
 
         if (DEBUG_ROOM_LAYOUTS) {
             layoutGenerator.drawLayout(room.visual, hive.layout);
