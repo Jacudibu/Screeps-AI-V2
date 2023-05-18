@@ -1,3 +1,4 @@
+const RemoteScanner = require("hivelogic/remotescanner");
 global.Hives = {};
 
 /* Owned rooms are called Hives.
@@ -5,14 +6,14 @@ global.Hives = {};
  */
 class Hive {
     constructor(roomName) {
+        Hives[roomName] = this;
         this._roomName = roomName;
 
-        if (!Memory.hives[roomName]) {
+        if (Memory.hives[roomName] === undefined) {
             log.info("A new hive has been established in " + this.room + "!");
             Memory.hives[roomName] = {layout: {}};
+            RemoteScanner.setupRemoteData(this);
         }
-
-        Hives[this.roomName] = this;
     }
 
     // The name of this hive's room.
@@ -62,6 +63,10 @@ class Hive {
         } else {
             delete this.memory.remotes;
         }
+    }
+
+    refreshRemoteData(remoteData, room) {
+        RemoteScanner.evaluateRemote(this, remoteData, room);
     }
 
     toString() {

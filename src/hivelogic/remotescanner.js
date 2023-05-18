@@ -36,24 +36,15 @@ class RemoteScanner {
                 distance: r.distance,
             };
         }
-
-        const storagePos = hive.layout.core.storage[0];
-        const hiveRoomStoragePosition = new RoomPosition(storagePos.x, storagePos.y, hive.roomName);
-        for (const remoteName in hive.remotes) {
-            const remoteData = hive.remotes[remoteName];
-            this._evaluateRemote(hiveRoomStoragePosition, remoteData, remoteName);
-        }
     }
 
-    // Technically we don't really wanna evaluate at rcl1 or rcl2 anyway and just go at it
-    static _evaluateRemote(hiveRoomStoragePosition, remoteData, remoteName) {
-        const room = Game.rooms[remoteName];
-        if (room === undefined) {
-            return;
-        }
+    static evaluateRemote(hive, remoteData, room) {
+        const storagePos = hive.layout.core.storage[0];
+        const hiveRoomStoragePosition = new RoomPosition(storagePos.x, storagePos.y, hive.roomName);
+        remoteData.sourceDistance = _.map(room.sources,
+                s => PathFinder.search(s.pos, hiveRoomStoragePosition, {maxRooms: remoteData.distance + 1}).path.length); // TODO: This ignores potential tunnels
 
-        const sourceDistance = _.sum(room.sources, s => s.pos.findPathTo(hiveRoomStoragePosition)); // TODO: This ignores potential tunnels
-        remoteData.value = room.sources.length * 20 - (sourceDistance / room.sources.length);
+        remoteData.max_early_workers = _.sum(remoteData.sourceDistance, dist => 1 + Math.trunc(dist / 50));
     }
 }
 

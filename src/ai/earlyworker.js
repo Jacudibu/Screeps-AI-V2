@@ -28,9 +28,7 @@ const earlyWorker = {
     _harvestEnergy(creep) {
         if(creep.store.getFreeCapacity() === 0) {
             if (creep.room.name !== creep.origin) {
-                creep.setTask(TASK.MOVE_TO_ROOM);
-                creep.targetRoomName = creep.origin;
-                this.run(creep);
+                this._moveBackToHive(creep);
                 return;
             }
 
@@ -44,13 +42,7 @@ const earlyWorker = {
 
     _harvestRemoteEnergy(creep) {
         if(creep.store.getFreeCapacity() === 0) {
-            creep.setTask(TASK.MOVE_TO_ROOM);
-            creep.targetRoomName = creep.origin;
-            const remoteData = Hives[creep.origin].remotes[creep.room];
-            if (remoteData.current_early_workers) {
-                remoteData.current_early_workers -= 1;
-            }
-            this.run(creep);
+            this._moveBackToHive(creep);
             return;
         }
 
@@ -138,6 +130,16 @@ const earlyWorker = {
         this.run(creep);
     },
 
+    _moveBackToHive(creep) {
+        const remoteData = Hives[creep.origin].remotes[creep.room.name];
+        if (remoteData.current_early_workers && remoteData.current_early_workers > 0) { // FIXME: remove the > 0 in next spawn
+            remoteData.current_early_workers -= 1;
+        }
+        creep.setTask(TASK.MOVE_TO_ROOM);
+        creep.targetRoomName = creep.origin;
+        this.run(creep);
+    },
+
     _getMoreEnergy(creep) {
         // TODO: Search for drops or containers / tombstones / storage to pick up instead of mining
 
@@ -148,7 +150,7 @@ const earlyWorker = {
             return;
         }
 
-        const hive = Hives[creep.origin]
+        const hive = Hives[creep.origin];
         log.info("looking into remotes for " + hive);
         for (const remoteName in hive.remotes) { // TODO: this expects hives.remotes to be sorted by value to work efficiently, but will also allow us to get vision to calculate that fairly easily.
             log.info("testing " + remoteName);
@@ -191,10 +193,13 @@ const earlyWorker = {
 
     _findHarvestableRemoteSource(creep) {
         const allEarlyWorkers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.EARLY_WORKER});
-        // TODO: source distance should be cached in hive.remotes, sort by that. If it is not, this means the remote hasn't been evaluated yet. Do that now!~
-        // ...issue with that: We wouldn't want to cache the source id in remote memory, right? Just the source distance
-        // oh, but room.sources should always have the same order, so this is fiiine (tm) Nyehehehehe!
-        const sources = creep.room.sources;
+        const hive = Hives[creep.origin];
+        const remoteData = hive.remotes[creep.room.name];
+        if (remoteData.sourceDistance === undefined) {
+            hive.refreshRemoteData(remoteData, creep.room);
+        }
+
+        const sources = creep.room.sources; // TODO: order by sourcecount.
 
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];

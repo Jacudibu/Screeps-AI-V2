@@ -1,6 +1,5 @@
 const baseBuilder = require('hivelogic/basebuilder')
 const spawnLogic = require('hivelogic/spawnlogic');
-const RemoteScanner = require('hivelogic/remotescanner')
 const layoutGenerator = require('hivelogic/layouts/layoutgenerator')
 
 const DEBUG_ROOM_LAYOUTS = true;
@@ -27,7 +26,7 @@ const hiveMind = {
     _runHiveLogic(hive) {
         const room = hive.room;
         if (room === undefined) {
-            log.warning("Lost hivelogic in room " + room);
+            log.warning("Lost hive in room " + room);
             delete Hives[hive.roomName]
             return;
         }
@@ -39,8 +38,6 @@ const hiveMind = {
                 layoutGenerator.generateHiveRoads(hive, room);
             }
         }
-
-        RemoteScanner.setupRemoteData(hive);
 
         spawnLogic.run(hive, room);
         baseBuilder.placePlannedConstructionSite(hive, room);
