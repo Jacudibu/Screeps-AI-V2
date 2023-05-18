@@ -1,10 +1,13 @@
 const propertyStrings = [
+    "origin",
     "role",
     "task",
     "taskTargetId",
     "targetRoomName"
 ];
 
+// This creep's spawn location.
+Creep.prototype.origin = undefined;
 Creep.prototype.role = undefined;
 Creep.prototype.task = undefined;
 Creep.prototype.taskTargetId = undefined;
