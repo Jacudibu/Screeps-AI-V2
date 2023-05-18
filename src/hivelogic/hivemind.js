@@ -38,7 +38,7 @@ const hiveMind = {
             }
         }
 
-        spawnLogic.run(room);
+        spawnLogic.run(hive, room);
         baseBuilder.placePlannedConstructionSite(hive, room);
 
         const hostiles = room.find(FIND_HOSTILE_CREEPS);

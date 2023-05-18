@@ -1,5 +1,6 @@
 const spawnLogic = {
-    run(room) {
+    run(hive, room) {
+        // TODO: Technically we want to reserve one spawn for critical needs, but that's far in the future music right now
         const idleSpawn = _.find(room.spawns, spawn => {
             return spawn.my && spawn.isActive() && spawn.spawning === null;
         });
@@ -42,19 +43,19 @@ const spawnLogic = {
         } else {
             body = [WORK, CARRY, MOVE, MOVE];
         }
-        const memory = {role: ROLE.EARLY_WORKER};
-
-        this._spawnCreep(spawn, body, memory)
+        this._spawnCreep(spawn, ROLE.EARLY_WORKER, body, {})
     },
 
     _spawnScout(room, spawn) {
         let body = [MOVE];
-        const memory = {role: ROLE.SCOUT};
 
-        this._spawnCreep(spawn, body, memory)
+        this._spawnCreep(spawn, ROLE.SCOUT, body, {})
     },
 
-    _spawnCreep(spawn, body, memory) {
+    _spawnCreep(spawn, role, body, memory = {}) {
+        memory.role = role;
+        memory.origin = spawn.room.name;
+
         const name = Memory.creepsBuilt.toString();
         const result = spawn.spawnCreep(body, name, {memory: memory});
         switch (result) {
