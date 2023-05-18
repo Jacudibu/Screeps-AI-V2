@@ -32,6 +32,15 @@ class Utils {
 
         return freeTileCount;
     };
+
+    static getClosestRoomObjectToPosition(pos, toArray) {
+        return toArray
+            .reduce((currentlyClosestObject, element) =>
+                pos.getRangeTo(currentlyClosestObject.pos) < pos.getRangeTo(element.pos)
+                    ? currentlyClosestObject
+                    : element
+            );
+    };
 }
 
 profiler.registerObject(Utils, "Utils");

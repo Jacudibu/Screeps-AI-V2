@@ -1,4 +1,4 @@
-const earlyCreep = {
+const earlyWorker = {
     run(creep) {
         switch (creep.task) {
             case TASK.HARVEST_ENERGY: return this._harvestEnergy(creep);
@@ -60,17 +60,17 @@ const earlyCreep = {
     },
 
     _findDepositEnergyTarget(creep) {
-        const spawn = creep.room.spawns[0];
+        const spawn = creep.room.mySpawns[0];
         if (spawn.canStillStoreEnergy()) {
             return spawn;
         }
 
-        const extensions = _.filter(creep.room.extensions, extension => extension.canStillStoreEnergy());
+        const extensions = _.filter(creep.room.myExtensions, extension => extension.canStillStoreEnergy());
         if (extensions.length > 0) {
             return extensions[0];
         }
 
-        const towers = _.filter(creep.room.towers, tower => tower.canStillStoreEnergy());
+        const towers = _.filter(creep.room.myTowers, tower => tower.canStillStoreEnergy());
         if (towers.length > 0) {
             return towers[0];
         }
@@ -185,5 +185,5 @@ const earlyCreep = {
     }
 };
 
-module.exports = earlyCreep;
-profiler.registerObject(earlyCreep, "earlyCreep")
+module.exports = earlyWorker;
+profiler.registerObject(earlyWorker, "earlyWorker")
