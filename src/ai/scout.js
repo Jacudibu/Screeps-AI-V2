@@ -38,7 +38,7 @@ const scout = {
 
     _signController(creep) {
         if (creep.room.controller === undefined) {
-            this._continueScouting();
+            this._continueScouting(creep);
             return;
         }
 
