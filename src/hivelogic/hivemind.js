@@ -53,7 +53,7 @@ const hiveMind = {
         this._setupRemoteData(hive);
 
         if (DEBUG_ROOM_LAYOUTS) {
-            this._draw(room.visual, hive.layout);
+            layouts.processor.drawLayout(room.visual, hive.layout);
         }
     },
 
@@ -106,43 +106,6 @@ const hiveMind = {
         const sourceDistance = _.sum(room.sources, s => s.pos.findPathTo(hiveRoomStoragePosition)); // TODO: This ignores potential tunnels
         remoteData.value = room.sources.length * 20 - (sourceDistance / room.sources.length);
     },
-
-    _draw(roomVisual, layout) {
-        const opts = {opacity: 0.2};
-        if (layout.core) {
-            for (const structureType in layout.core) {
-                for (const pos of layout.core[structureType]) {
-                    roomVisual.structure(pos.x, pos.y, structureType, opts);
-                }
-            }
-        }
-
-        if (layout.roads === undefined) {
-            return;
-        }
-
-        if (layout.roads.sources) {
-            for (const i in layout.roads.sources) {
-                for (const pos of layout.roads.sources[i]) {
-                    roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
-                }
-            }
-        }
-
-        if (layout.roads.controller) {
-            for (const pos of layout.roads.controller) {
-                roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
-            }
-        }
-
-        if (layout.roads.mineral) {
-            for (const pos of layout.roads.mineral) {
-                roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
-            }
-        }
-
-        roomVisual.connectRoads(opts);
-    }
 }
 
 profiler.registerObject(hiveMind, "hiveMind");
