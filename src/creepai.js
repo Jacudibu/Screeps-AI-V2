@@ -1,6 +1,5 @@
 const ai = {
     [ROLE.EARLY_WORKER]: require('ai/earlyworker'),
-    [ROLE.EARLY_REMOTE]: require('ai/earlyremoteworker'),
     [ROLE.SCOUT]: require('ai/scout'),
 };
 

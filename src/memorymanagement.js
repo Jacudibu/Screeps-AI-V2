@@ -36,7 +36,6 @@ const memoryManagement = {
             log.warning("====== Respawn detected ======");
             Memory = {
                 creeps: {},
-                spawns: {},
                 rooms: {}, // Technically we don't need to delete old scout data!
                 flags: {},
                 hives: {},

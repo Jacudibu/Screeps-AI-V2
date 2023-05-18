@@ -3,6 +3,7 @@ global.TASK = {
     DECIDE_WHAT_TO_DO: "decide",
     DEPOSIT_ENERGY: "deposit_energy",
     HARVEST_ENERGY: "harvest_energy",
+    HARVEST_REMOTE_ENERGY: "harvest_remote_energy",
     IDLE: "idle",
     MOVE_TO_ROOM: "move_to_room",
     UPGRADE_CONTROLLER: "upgrade_controller",
