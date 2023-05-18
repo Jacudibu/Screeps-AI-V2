@@ -29,6 +29,8 @@
 
  Additional Changes:
  - Autocompletion magic
+ - Cache for My & Hostile structures
+ - Function to force cache updates
  */
 
 Room.prototype.observer = null;
@@ -36,8 +38,6 @@ Room.prototype.powerSpawn = null;
 Room.prototype.extractor = null;
 Room.prototype.nuker = null;
 Room.prototype.factory = null;
-
-// Multilist
 Room.prototype.spawns = null;
 Room.prototype.extensions = null;
 Room.prototype.roads = null;
@@ -50,11 +50,38 @@ Room.prototype.towers = null;
 Room.prototype.labs = null;
 Room.prototype.containers = null;
 Room.prototype.powerBanks = null;
-
-
-
 let roomStructures           = {};
 let roomStructuresExpiration = {};
+
+Room.prototype.myObserver = null;
+Room.prototype.myPowerSpawn = null;
+Room.prototype.myExtractor = null;
+Room.prototype.myNuker = null;
+Room.prototype.myFactory = null;
+Room.prototype.mySpawns = null;
+Room.prototype.myExtensions = null;
+Room.prototype.myRamparts = null;
+Room.prototype.myLinks = null;
+Room.prototype.myTowers = null;
+Room.prototype.myLabs = null;
+Room.prototype.myContainers = null;
+let myRoomStructures           = {};
+let myRoomStructuresExpiration = {};
+
+Room.prototype.hostileObserver = null;
+Room.prototype.hostilePowerSpawn = null;
+Room.prototype.hostileExtractor = null;
+Room.prototype.hostileNuker = null;
+Room.prototype.hostileFactory = null;
+Room.prototype.hostileSpawns = null;
+Room.prototype.hostileExtensions = null;
+Room.prototype.hostileRamparts = null;
+Room.prototype.hostileLinks = null;
+Room.prototype.hostileTowers = null;
+Room.prototype.hostileLabs = null;
+Room.prototype.hostileContainers = null;
+let hostileRoomStructures           = {};
+let hostileRoomStructuresExpiration = {};
 
 const CACHE_TIMEOUT = 50;
 const CACHE_OFFSET  = 4;
@@ -68,6 +95,16 @@ const multipleList = [
 const singleList = [
     STRUCTURE_OBSERVER,     STRUCTURE_POWER_SPAWN,  STRUCTURE_EXTRACTOR,	STRUCTURE_NUKER,
     STRUCTURE_FACTORY,		//STRUCTURE_TERMINAL,   STRUCTURE_CONTROLLER,   STRUCTURE_STORAGE,
+];
+
+const ownedMultipleList = [
+    STRUCTURE_SPAWN,        STRUCTURE_EXTENSION,    STRUCTURE_RAMPART,      STRUCTURE_LINK,
+    STRUCTURE_TOWER,        STRUCTURE_LAB,
+];
+
+const ownedSingleList = [
+    STRUCTURE_OBSERVER,     STRUCTURE_POWER_SPAWN,  STRUCTURE_EXTRACTOR,	STRUCTURE_NUKER,
+    STRUCTURE_FACTORY,		STRUCTURE_TERMINAL,     STRUCTURE_STORAGE,
 ];
 
 function getCacheExpiration(){
@@ -138,3 +175,129 @@ singleList.forEach(function(type){
         configurable: true,
     });
 });
+
+Room.prototype._checkMyRoomCache = function _checkMyRoomCache(){
+    // if cache is expired or doesn't exist
+    if(!myRoomStructuresExpiration[this.name] || !myRoomStructures[this.name] || myRoomStructuresExpiration[this.name] < Game.time){
+        myRoomStructuresExpiration[this.name] = Game.time + getCacheExpiration();
+        myRoomStructures[this.name] = _.groupBy(this.find(FIND_MY_STRUCTURES), s=>s.structureType);
+        let i;
+        for(i in myRoomStructures[this.name]){
+            myRoomStructures[this.name][i] = _.map(myRoomStructures[this.name][i], s=>s.id);
+        }
+    }
+}
+
+Room.prototype._checkHostileRoomCache = function _checkHostileRoomCache(){
+    // if cache is expired or doesn't exist
+    if(!hostileRoomStructuresExpiration[this.name] || !hostileRoomStructures[this.name] || hostileRoomStructuresExpiration[this.name] < Game.time){
+        hostileRoomStructuresExpiration[this.name] = Game.time + getCacheExpiration();
+        hostileRoomStructures[this.name] = _.groupBy(this.find(FIND_HOSTILE_STRUCTURES), s=>s.structureType);
+        let i;
+        for(i in hostileRoomStructures[this.name]){
+            hostileRoomStructures[this.name][i] = _.map(hostileRoomStructures[this.name][i], s=>s.id);
+        }
+    }
+}
+
+ownedMultipleList.forEach(function(type){
+    const propName = "my" + _.capitalize(type) +'s';
+
+    Object.defineProperty(Room.prototype, propName, {
+        get: function(){
+            if(this['_'+propName] && this['_'+propName+'_ts'] === Game.time){
+                return this['_'+propName+'s'];
+            } else {
+                this._checkMyRoomCache();
+                if(myRoomStructures[this.name][type]) {
+                    this['_'+propName+'s_ts'] = Game.time;
+                    return this['_'+propName+'s'] = myRoomStructures[this.name][type].map(Game.getObjectById);
+                } else {
+                    this['_'+propName+'s_ts'] = Game.time;
+                    return this['_'+propName+'s'] = [];
+                }
+            }
+        },
+        set: function(){},
+        enumerable: false,
+        configurable: true,
+    });
+});
+
+ownedSingleList.forEach(function(type){
+    const propName = "my" + _.capitalize(type);
+
+    Object.defineProperty(Room.prototype, propName, {
+        get: function(){
+            if(this['_'+propName] && this['_'+propName+'_ts'] === Game.time){
+                return this['_'+propName];
+            } else {
+                this._checkMyRoomCache();
+                if(myRoomStructures[this.name][propName]) {
+                    this['_'+propName+'_ts'] = Game.time;
+                    return this['_'+propName] = Game.getObjectById(myRoomStructures[this.name][propName][0]);
+                } else {
+                    this['_'+propName+'_ts'] = Game.time;
+                    return this['_'+propName] = undefined;
+                }
+            }
+        },
+        set: function(){},
+        enumerable: false,
+        configurable: true,
+    });
+});
+
+ownedMultipleList.forEach(function(type){
+    const propName = "hostile" + _.capitalize(type) +'s';
+
+    Object.defineProperty(Room.prototype, propName, {
+        get: function(){
+            if(this['_'+propName] && this['_'+propName+'_ts'] === Game.time){
+                return this['_'+propName+'s'];
+            } else {
+                this._checkHostileRoomCache();
+                if(hostileRoomStructures[this.name][type]) {
+                    this['_'+propName+'s_ts'] = Game.time;
+                    return this['_'+propName+'s'] = hostileRoomStructures[this.name][type].map(Game.getObjectById);
+                } else {
+                    this['_'+propName+'s_ts'] = Game.time;
+                    return this['_'+propName+'s'] = [];
+                }
+            }
+        },
+        set: function(){},
+        enumerable: false,
+        configurable: true,
+    });
+});
+
+ownedSingleList.forEach(function(type){
+    const propName = "hostile" + _.capitalize(type);
+
+    Object.defineProperty(Room.prototype, propName, {
+        get: function(){
+            if(this['_'+propName] && this['_'+propName+'_ts'] === Game.time){
+                return this['_'+propName];
+            } else {
+                this._checkHostileRoomCache();
+                if(hostileRoomStructures[this.name][propName]) {
+                    this['_'+propName+'_ts'] = Game.time;
+                    return this['_'+propName] = Game.getObjectById(hostileRoomStructures[this.name][propName][0]);
+                } else {
+                    this['_'+propName+'_ts'] = Game.time;
+                    return this['_'+propName] = undefined;
+                }
+            }
+        },
+        set: function(){},
+        enumerable: false,
+        configurable: true,
+    });
+});
+
+Room.prototype.forceStructureCacheUpdate = function() {
+    roomStructuresExpiration[this.name] = 0;
+    myRoomStructuresExpiration[this.name] = 0;
+    hostileRoomStructuresExpiration[this.name] = 0;
+};

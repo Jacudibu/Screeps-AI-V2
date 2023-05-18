@@ -43,7 +43,7 @@ const hiveMind = {
 
         const hostiles = room.find(FIND_HOSTILE_CREEPS);
         if (hostiles.length > 0) {
-            for (const tower of room.towers) {
+            for (const tower of room.myTowers) {
                 tower.attack(hostiles[0])
             }
         }

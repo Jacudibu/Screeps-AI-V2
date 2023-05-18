@@ -11,7 +11,7 @@ global.layouts.processor = {
     generateRoomLayoutForRespawnRoom(room) {
         const bunkerLayout = layouts.bunkerV1;
 
-        const spawnPos = room.spawns[0].pos;
+        const spawnPos = room.mySpawns[0].pos;
         const layoutSpawnPos = bunkerLayout.buildings.spawn[0];
 
         const origin = {
@@ -33,8 +33,8 @@ global.layouts.processor = {
     },
 
     findBestBunkerOrigin(room, layout) {
-        if (room.spawns.length > 0) {
-            log.error("room.spawns.length > 0, why regenerate a layout?")
+        if (room.mySpawns.length > 0) {
+            log.error("room.mySpawns.length > 0, why regenerate a layout?")
         }
 
         // TODO: Find all positions in the room which fulfill width & height requirements

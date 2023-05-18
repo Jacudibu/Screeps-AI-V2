@@ -1,7 +1,7 @@
 const spawnLogic = {
     run(hive, room) {
         // TODO: Technically we want to reserve one spawn for critical needs, but that's far in the future music right now
-        const idleSpawn = _.find(room.spawns, spawn => {
+        const idleSpawn = _.find(room.mySpawns, spawn => {
             return spawn.my && spawn.isActive() && spawn.spawning === null;
         });
 
