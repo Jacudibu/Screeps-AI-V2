@@ -25,13 +25,16 @@ const memoryManagement = {
                 if (creepMemory.task === TASK.MOVE_TO_ROOM) {
                     delete Memory.rooms[creepMemory.targetRoomName].isScoutOnRoute;
                 }
-                break;
+                return;
+
             case ROLE.EARLY_WORKER:
                 const hive = Hives[creepMemory.origin];
                 hive.earlyGameHarvesterCount -= 1;
-                if (creepMemory.task === TASK.HARVEST_REMOTE_ENERGY) {
+                if (creepMemory.targetRoomName !== creepMemory.origin) {
                     hive.remotes[creepMemory.targetRoomName].current_early_workers -= 1;
                 }
+                return;
+
             default:
                 break;
         }
