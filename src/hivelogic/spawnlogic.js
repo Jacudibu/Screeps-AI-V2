@@ -27,7 +27,7 @@ const spawnLogic = {
             }
         });
 
-        return earlyWorkersInRoom.length <= _.sum(room.sources, source => source.earlyGameHarvesterCount);
+        return earlyWorkersInRoom.length <= _.sum(room.sources, source => source.earlyGameHarvesterCount) + 5; // FIXME cache current early worker count in hive somewhere
     },
 
     _areScoutsNeeded(room) {

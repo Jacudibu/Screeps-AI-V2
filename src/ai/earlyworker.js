@@ -134,12 +134,52 @@ const earlyWorker = {
     _getMoreEnergy(creep) {
         // TODO: Search for drops or containers / tombstones / storage to pick up instead of mining
 
-        const source = creep.roomName === creep.origin
-            ? this._findFreeHarvestableSource(creep)
-            : this._findHarvestableRemoteSource(creep);
-        creep.setTask(TASK.HARVEST_ENERGY, source.id);
+        const source = creep.room.name === creep.origin ? this._findFreeHarvestableSource(creep) : this._findHarvestableRemoteSource(creep);
+        if (source !== undefined) {
+            creep.setTask(TASK.HARVEST_ENERGY, source.id);
+            this.run(creep);
+            return;
+        }
 
-        this.run(creep);
+        const hive = Hives[creep.origin]
+        log.info("looking into remotes for " + hive);
+        for (const remoteName in hive.remotes) { // TODO: this expects hives.remotes to be sorted by value to work efficiently, but will also allow us to get vision to calculate that fairly easily.
+            log.info("testing " + remoteName);
+            const remote = hive.remotes[remoteName];
+            if (remote.max_early_workers === undefined) {
+                remote.max_early_workers = 1;
+                remote.current_early_workers = 1;
+            } else if (remote.current_early_workers < remote.max_early_workers) {
+                remote.current_early_workers += 1;
+            } else {
+                continue;
+            }
+
+            log.info("picking " + remoteName + "as remote.")
+            creep.setTask(TASK.MOVE_TO_ROOM);
+            creep.targetRoomName = remoteName;
+            this.run(creep);
+            return;
+        }
+
+        log.warning(creep + "Absolutely NOTHING found to harvest from?!");
+    },
+
+    _findFreeHarvestableSource(creep) {
+        const allEarlyWorkers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.EARLY_WORKER});
+        const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
+
+        for (let i = 0; i < sources.length; i++) {
+            const source = sources[i];
+            const creepsAssignedToSource = utils.count(allEarlyWorkers, creep => creep.taskTargetId === source.id);
+
+            if (creepsAssignedToSource < source.earlyGameHarvesterCount){
+                return source;
+            }
+        }
+
+        log.info(creep + " No free sources in hive room " + creep.room);
+        return undefined;
     },
 
     _findHarvestableRemoteSource(creep) {
@@ -158,47 +198,7 @@ const earlyWorker = {
             }
         }
 
-        log.warning(creep + "Unable to determine which source to pick, choosing the first one instead...")
-        return sources[0];
-    },
-
-    _findFreeHarvestableSource(creep) {
-        const allEarlyWorkers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.EARLY_WORKER});
-        const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
-
-        for (let i = 0; i < sources.length; i++) {
-            const source = sources[i];
-            const creepsAssignedToSource = utils.count(allEarlyWorkers, creep => creep.taskTargetId === source.id);
-
-            if (creepsAssignedToSource < source.earlyGameHarvesterCount){
-                return source;
-            }
-        }
-
-        const hive = Hives[creep.room.name]
-        if (hive === undefined) {
-            log.warning(creep + "Unable to determine which source to pick, choosing the first one instead...")
-            return sources[0];
-        }
-
-        for (const remoteName in hive.remotes) { // TODO: this expects hives.remotes to be sorted by value to work efficiently, but will also allow us to get vision to calculate that fairly easily.
-            const remote = hive.remotes[remoteName];
-            if (remote.max_early_workers === undefined) {
-                remote.max_early_workers = 1;
-                remote.current_early_workers = 1;
-            } else if (remote.current_early_workers < remote.max_early_workers) {
-                remote.current_early_workers += 1;
-            } else {
-                continue;
-            }
-
-            creep.targetRoomName = remoteName;
-            creep.setTask(TASK.MOVE_TO_ROOM);
-            this.run();
-            return;
-        }
-
-        log.warning(creep + "Unable to determine which source to pick, choosing the first one instead...")
+        log.warning(creep + "Unable to determine which source to pick in remote, choosing the first one instead...")
         return sources[0];
     },
 

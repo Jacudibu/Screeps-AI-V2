@@ -6,6 +6,9 @@ class RemoteScanner {
         // This currently hardcodes remote distance to 2, but that shouldn't be a problem...
         for (const dir in mainRoomNeighbors) {
             const roomName = mainRoomNeighbors[dir];
+            if (utils.isRoomHighway(roomName)) {
+                continue;
+            }
 
             neighborRooms.push({name: roomName, distance: 1});
             const neighborNeighbors = Game.map.describeExits(roomName);
@@ -16,6 +19,10 @@ class RemoteScanner {
                 }
 
                 if (_.contains(neighborRooms, neighborName)) {
+                    continue;
+                }
+
+                if (utils.isRoomHighway(neighborName)) {
                     continue;
                 }
 
