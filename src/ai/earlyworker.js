@@ -27,6 +27,13 @@ const earlyWorker = {
 
     _harvestEnergy(creep) {
         if(creep.store.getFreeCapacity() === 0) {
+            if (creep.room.name !== creep.origin) {
+                creep.setTask(TASK.MOVE_TO_ROOM);
+                creep.targetRoomName = creep.origin;
+                this.run(creep);
+                return;
+            }
+
             this._figureOutHowToUseEnergy(creep);
             this.run(creep);
             return;

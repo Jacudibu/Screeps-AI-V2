@@ -37,9 +37,10 @@ const hiveMind = {
                 log.info(hive + "Generating room layout for respawn room.")
                 hive.layout.core = layoutGenerator.generateCoreLayoutForRespawnRoom(room);
                 layoutGenerator.generateHiveRoads(hive, room);
-                RemoteScanner.setupRemoteData(hive);
             }
         }
+
+        RemoteScanner.setupRemoteData(hive);
 
         spawnLogic.run(hive, room);
         baseBuilder.placePlannedConstructionSite(hive, room);
