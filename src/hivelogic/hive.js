@@ -8,6 +8,7 @@ class Hive {
     constructor(roomName) {
         Hives[roomName] = this;
         this._roomName = roomName;
+        this.earlyWorkerCount = 0;
 
         if (Memory.hives[roomName] === undefined) {
             log.info("A new hive has been established in " + this.room + "!");
@@ -85,6 +86,12 @@ class Hive {
     static onGlobalReset() {
         for (const hiveRoom in Memory.hives) {
             new Hive(hiveRoom);
+        }
+
+        for (const creep in Memory.creeps) {
+            if (creep.role === ROLE.EARLY_WORKER) {
+                Hives[creep.origin].earlyWorkerCount += 1;
+            }
         }
     }
 }

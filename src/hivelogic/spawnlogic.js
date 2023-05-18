@@ -9,7 +9,7 @@ const spawnLogic = {
             return;
         }
 
-        if (this._areEarlyWorkersNeeded(room)) {
+        if (this._areEarlyWorkersNeeded(hive, room)) {
             this._spawnEarlyWorker(room, idleSpawn);
             return;
         }
@@ -20,14 +20,9 @@ const spawnLogic = {
         }
     },
 
-    _areEarlyWorkersNeeded(room) {
-        const earlyWorkersInRoom = room.find(FIND_MY_CREEPS, {
-            filter: creep => {
-                return creep.role === ROLE.EARLY_WORKER;
-            }
-        });
-
-        return earlyWorkersInRoom.length <= _.sum(room.sources, source => source.earlyGameHarvesterCount) + 5; // FIXME cache current early worker count in hive somewhere
+    _areEarlyWorkersNeeded(hive, room) {
+        return hive.earlyWorkerCount < _.sum(room.sources, source => source.earlyGameHarvesterCount)
+                                     + _.sum(hive.remotes, r => r.max_early_workers);
     },
 
     _areScoutsNeeded(room) {
