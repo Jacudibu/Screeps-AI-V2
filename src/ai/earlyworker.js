@@ -132,7 +132,7 @@ const earlyWorker = {
 
     _moveBackToHive(creep) {
         const remoteData = Hives[creep.origin].remotes[creep.room.name];
-        if (remoteData.current_early_workers > 0) { // FIXME: remove the > 0 in next spawn
+        if (remoteData !== undefined && remoteData.current_early_workers > 0) { // FIXME: remove the > 0 in next spawn
             remoteData.current_early_workers -= 1;
         }
         creep.setTask(TASK.MOVE_TO_ROOM);

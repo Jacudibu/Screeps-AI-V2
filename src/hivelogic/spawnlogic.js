@@ -21,6 +21,10 @@ const spawnLogic = {
     },
 
     _areEarlyWorkersNeeded(hive, room) {
+        if (room.controller.level === 1) {
+            return hive.earlyWorkerCount < _.sum(room.sources, source => source.earlyGameHarvesterCount)
+                                         + _.sum(hive.remotes, r => r.max_early_workers) * 0.5;
+        }
         return hive.earlyWorkerCount < _.sum(room.sources, source => source.earlyGameHarvesterCount)
                                      + _.sum(hive.remotes, r => r.max_early_workers);
     },
