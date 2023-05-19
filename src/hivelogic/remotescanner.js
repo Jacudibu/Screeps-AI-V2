@@ -41,7 +41,17 @@ class RemoteScanner {
                     continue;
                 }
 
-                const obj = {name: neighborName, distance: current.distance + 1, route: current.name};
+                const obj = {
+                    name: neighborName,
+                    distance: current.distance + 1,
+                };
+
+                if (current.route === undefined || current.name === hive.roomName) {
+                    obj.route = [];
+                } else {
+                    obj.route = [current.name, ...current.route]
+                }
+
                 discoveredRooms.push(obj);
 
                 if (obj.distance < maxDistance) {
@@ -63,13 +73,13 @@ class RemoteScanner {
 
     static orderRemotesByValue(hive) {
         const oldData = hive.remotes;
-        const values = [];
+        let values = [];
 
         for (const name in oldData) {
             values.push({name: name, data: oldData[name]})
         }
 
-        _.sortBy(values, v => _.min(v.data.sources));
+        values = _.sortBy(values, v => _.min(v.data.sourceDistance));
 
         const newData = {};
         for (const value of values) {
