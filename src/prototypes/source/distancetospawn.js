@@ -13,7 +13,7 @@ Source.prototype._calculateDistanceToSpawn = function() {
     if (this.room.mySpawns.length === 0) {
         const spawnConstructionSites = this.room.find(FIND_MY_CONSTRUCTION_SITES, {filter: cs => cs.structureType === STRUCTURE_SPAWN});
         if (spawnConstructionSites.length > 0) {
-            const travelPath = traveler.Traveler.findTravelPath(this, spawnConstructionSites[0]);
+            const travelPath = Traveler.findTravelPath(this, spawnConstructionSites[0]);
             return travelPath.path.length;
         }
 
@@ -21,6 +21,6 @@ Source.prototype._calculateDistanceToSpawn = function() {
         return;
     }
 
-    let travelPath = traveler.Traveler.findTravelPath(this, this.room.mySpawns[0]);
+    let travelPath = Traveler.findTravelPath(this, this.room.mySpawns[0]);
     return travelPath.path.length;
 };

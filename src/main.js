@@ -1,5 +1,5 @@
 global.profiler = require('tools/screeps-profiler');
-global.traveler = require('tools/traveler');
+require('tools/traveler');
 require('tools/roomvisual');
 
 require('clienthacks/clickabletostring');
@@ -35,10 +35,6 @@ require('players');
 const memoryManagement = require('memorymanagement');
 const hiveMind = require("hivelogic/hivemind");
 const creepAi = require("creepai");
-
-global.PLAYER_NAME = "Jacudibu";
-global.INVADER_PLAYER_NAME = "Invader";
-global.SOURCE_KEEPER_PLAYER_NAME = "Source Keeper";
 
 module.exports.loop = memoryCache(function() {
     if (Game.cpu.bucket === 10000 && Game.cpu.generatePixel !== undefined) {

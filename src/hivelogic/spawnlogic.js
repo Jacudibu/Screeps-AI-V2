@@ -1,3 +1,4 @@
+const {ThreatDetection} = require("../threatdetection");
 const spawnLogic = {
     run(hive, room) {
         // TODO: Technically we want to reserve one spawn for critical needs, but that's far in the future music right now
@@ -7,6 +8,10 @@ const spawnLogic = {
 
         if (idleSpawn === undefined) {
             return;
+        }
+
+        if (ThreatDetection.at(room.name !== undefined)) {
+            this._spawnRangedDefender(hive, room, idleSpawn);
         }
 
         if (this._areEarlyWorkersNeeded(hive, room)) {
@@ -39,6 +44,21 @@ const spawnLogic = {
             body = [WORK, CARRY, MOVE, MOVE];
         }
         this._spawnCreep(hive, spawn, ROLE.EARLY_WORKER, body, {})
+    },
+
+    _spawnRangedDefender(hive, room, spawn) {
+        const repeatingParts = [RANGED_ATTACK, MOVE];
+        const partCosts = _.sum(repeatingParts, x => BODYPART_COST[x]);
+
+        let body;
+        let remainingCapacity = room.energyCapacityAvailable;
+
+        while (remainingCapacity > remainingCapacity && body.length + repeatingParts.length < 50) {
+            body.push(repeatingParts);
+            remainingCapacity -= partCosts;
+        }
+
+        this._spawnCreep(hive, spawn, ROLE.RANGED_DEFENDER, body, {})
     },
 
     _spawnScout(hive, room, spawn) {

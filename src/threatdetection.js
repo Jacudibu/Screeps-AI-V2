@@ -1,5 +1,5 @@
 export class ThreatDetection {
-    static threat = {};
+    static _threat = {};
     static THREAT_TYPES = {
         HARMLESS: 0,
         WORK: 1,
@@ -7,13 +7,18 @@ export class ThreatDetection {
         RANGED: 3
     };
 
+    static at(roomName) {
+        return this._threat[roomName];
+    }
+
     static run() {
         for (const roomName in Game.rooms) {
             const room = Game.rooms[roomName];
             const hostiles = room.find(FIND_HOSTILE_CREEPS);
             if (hostiles.length === 0) {
                 // TODO: notify hives that threat is gone
-                this.threat[room] = undefined;
+                    // TODO: restore hive remotes
+                this._threat[room] = undefined;
             }
 
             let threat = {
@@ -54,11 +59,12 @@ export class ThreatDetection {
             threat.canHarmCreeps = threat.attack > 0 || threat.ranged_attack > 0;
             threat.canHarmBuildings = threat.canHarmCreeps || threat.work > 0;
 
-            if (this.threat[room] === undefined) {
+            if (this._threat[room] === undefined) {
                 // TODO: notify hives that a new threat was detected
+                    // TODO: evacuate hive remotes
             }
 
-            this.threat = threat;
+            this._threat = threat;
         }
     }
 }
