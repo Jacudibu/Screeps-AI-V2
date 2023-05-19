@@ -24,6 +24,11 @@ const memoryManagement = {
         hive.decreasePopulation(creepMemory.role);
 
         switch (creepMemory.role) {
+            case ROLE.EARLY_WORKER:
+                if (creepMemory.targetRoomName !== creepMemory.origin) {
+                    hive.remotes[creepMemory.targetRoomName].current_early_workers -= 1;
+                }
+                return;
             default:
                 break;
         }
