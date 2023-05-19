@@ -32,11 +32,7 @@ const hiveMind = {
         }
 
         if (room.checkForRCLUpdate()) {
-            if (hive.layout.core === undefined) {
-                log.info(hive + "Generating room layout for respawn room.")
-                hive.layout.core = layoutGenerator.generateCoreLayoutForRespawnRoom(room);
-                layoutGenerator.generateHiveRoads(hive, room);
-            }
+            // TODO: Update things?
         }
 
         spawnLogic.run(hive, room);

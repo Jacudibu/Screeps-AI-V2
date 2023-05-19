@@ -151,9 +151,7 @@ const earlyWorker = {
         }
 
         const hive = Hives[creep.origin];
-        log.info("looking into remotes for " + hive);
         for (const remoteName in hive.remotes) { // TODO: this expects hives.remotes to be sorted by value to work efficiently, but will also allow us to get vision to calculate that fairly easily.
-            log.info("testing " + remoteName);
             const remote = hive.remotes[remoteName];
             if (remote.max_early_workers === undefined) {
                 remote.max_early_workers = 1;
@@ -164,7 +162,6 @@ const earlyWorker = {
                 continue;
             }
 
-            log.info("picking " + remoteName + "as remote.")
             creep.setTask(TASK.MOVE_TO_ROOM);
             creep.targetRoomName = remoteName;
             this.run(creep);
@@ -187,7 +184,6 @@ const earlyWorker = {
             }
         }
 
-        log.info(creep + " No free sources in hive room " + creep.room);
         return undefined;
     },
 
@@ -210,7 +206,7 @@ const earlyWorker = {
             }
         }
 
-        log.warning(creep + "Unable to determine which source to pick in remote, choosing the first one instead...")
+        log.warning(creep + "Unable to determine which source to pick in remote " + creep.room.name + ", choosing the first one instead...")
         return sources[0];
     },
 

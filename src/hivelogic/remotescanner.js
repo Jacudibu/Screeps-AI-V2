@@ -1,4 +1,4 @@
-const maxDistance = 1;
+const maxDistance = 3;
 
 class RemoteScanner {
     static setupRemoteData(hive) {

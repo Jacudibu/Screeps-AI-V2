@@ -1,4 +1,5 @@
 const RemoteScanner = require("hivelogic/remotescanner");
+const layoutGenerator = require("hivelogic/layouts/layoutgenerator");
 global.Hives = {};
 
 /* Owned rooms are called Hives.
@@ -14,7 +15,15 @@ class Hive {
             log.info("A new hive has been established in " + this.room + "!");
             Memory.hives[roomName] = {layout: {}};
             RemoteScanner.setupRemoteData(this);
+
+            if (this.layout.core === undefined && hasRespawned()) {
+                log.info("Generating room layout for " + this)
+                this.layout.core = layoutGenerator.generateCoreLayoutForRespawnRoom(this.room);
+                layoutGenerator.generateHiveRoads(this, this.room);
+            }
         }
+
+        this.pos = new RoomPosition(4, 4, roomName)
     }
 
     // The name of this hive's room.
