@@ -13,13 +13,13 @@ class RemoteScanner {
 
             if (Utils.isRoomCenterRoom(potentialRemote.name)) {
                 if (Utils.isRoomSourceKeeperLair(potentialRemote.name)) {
-                    hive.lairs[potentialRemote.name] = {distance: potentialRemote.distance};
+                    hive.lairs[potentialRemote.name] = {route: potentialRemote.route};
                 }
                 continue;
             }
 
             hive.remotes[potentialRemote.name] = {
-                distance: potentialRemote.distance,
+                route: potentialRemote.route,
                 max_early_workers: 1,
             };
         }
@@ -40,7 +40,7 @@ class RemoteScanner {
                     continue;
                 }
 
-                const obj = {name: neighborName, distance: current.distance + 1};
+                const obj = {name: neighborName, distance: current.distance + 1, route: current};
                 discoveredRooms.push(obj);
 
                 if (obj.distance < maxDistance) {
@@ -55,7 +55,7 @@ class RemoteScanner {
 
     static evaluateRemote(hive, remoteData, room) {
         remoteData.sourceDistance = _.map(room.sources,
-                s => PathFinder.search(s.pos, hive.pos, {maxRooms: remoteData.distance + 1}).path.length); // TODO: This ignores potential tunnels
+                s => PathFinder.search(s.pos, hive.pos).path.length); // TODO: This ignores potential tunnels
 
         remoteData.max_early_workers = _.sum(remoteData.sourceDistance, dist => 1 + Math.trunc(dist / 50));
     }
