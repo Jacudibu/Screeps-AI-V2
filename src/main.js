@@ -35,7 +35,7 @@ const creepAi = require("creepai");
 global.PLAYER_NAME = "Jacudibu";
 
 module.exports.loop = memoryCache(function() {
-    if (Game.cpu.bucket === 10000) {
+    if (Game.cpu.bucket === 10000 && Game.cpu.generatePixel !== undefined) {
         Game.cpu.generatePixel();
     }
 
