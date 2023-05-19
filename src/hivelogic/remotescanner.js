@@ -2,8 +2,22 @@ const maxDistance = 3;
 
 class RemoteScanner {
     static setupRemoteData(hive) {
-        const mainRoomNeighbors = Game.map.describeExits(hive.roomName);
+        let discoveredRooms = this._discoverPotentialRemoteRooms(hive, maxDistance);
 
+        hive.remotes = {};
+        for (const r of discoveredRooms) {
+            log.info(JSON.stringify(r));
+            if (utils.isRoomHighway(r.name)) {
+                continue;
+            }
+
+            hive.remotes[r.name] = {
+                distance: r.distance,
+            };
+        }
+    }
+
+    static _discoverPotentialRemoteRooms(hive, maxDistance) {
         let discoveredRooms = [];
         let queue = [{name: hive.roomName, distance: 0}];
 
@@ -28,18 +42,7 @@ class RemoteScanner {
         }
 
         discoveredRooms.shift(); // getting rid of the hive room itself which was added in the first step
-
-        hive.remotes = {};
-        for (const r of discoveredRooms) {
-            log.info(JSON.stringify(r));
-            if (utils.isRoomHighway(r.name)) {
-                continue;
-            }
-
-            hive.remotes[r.name] = {
-                distance: r.distance,
-            };
-        }
+        return discoveredRooms;
     }
 
     static evaluateRemote(hive, remoteData, room) {
