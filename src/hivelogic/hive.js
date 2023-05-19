@@ -9,7 +9,7 @@ class Hive {
     constructor(roomName) {
         Hives[roomName] = this;
         this._roomName = roomName;
-        this.earlyWorkerCount = 0;
+        this.population = {};
 
         if (Memory.hives[roomName] === undefined) {
             log.info("A new hive has been established in " + this.room + "!");
@@ -93,6 +93,14 @@ class Hive {
         RemoteScanner.evaluateRemote(this, remoteData, room);
     }
 
+    increasePopulation(role) {
+        this.population[role] += 1;
+    }
+
+    decreasePopulation(role) {
+        this.population[role] -= 1;
+    }
+
     toString() {
         return "Hive@" + this.room.toString();
     }
@@ -111,7 +119,8 @@ class Hive {
             new Hive(hiveRoom);
         }
 
-        for (const creep in Memory.creeps) {
+        for (const creepName in Memory.creeps) {
+            const creep = Memory.creeps[creepName];
             if (creep.role === ROLE.EARLY_WORKER) {
                 Hives[creep.origin].earlyWorkerCount += 1;
             }
@@ -123,3 +132,19 @@ Hive.onGlobalReset();
 
 module.exports = Hive;
 profiler.registerClass(Hive, "Hive")
+
+global.getHive = function() {
+    for (const hive in Hives) {
+        return Hives[hive];
+    }
+}
+
+for (const creepName in Memory.creeps) {
+    const creep = Memory.creeps[creepName];
+    const hive = Hives[creep.origin];
+    for (const role in ROLE) {
+        hive.population[ROLE[role]] = 0;
+    }
+
+    hive.increasePopulation(creep.role);
+}

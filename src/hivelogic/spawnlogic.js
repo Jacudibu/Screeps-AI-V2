@@ -10,30 +10,30 @@ const spawnLogic = {
         }
 
         if (this._areEarlyWorkersNeeded(hive, room)) {
-            this._spawnEarlyWorker(room, idleSpawn);
+            this._spawnEarlyWorker(hive, room, idleSpawn);
             return;
         }
 
-        if (this._areScoutsNeeded(room)) {
-            this._spawnScout(room, idleSpawn);
+        if (this._areScoutsNeeded(hive, room)) {
+            this._spawnScout(hive, room, idleSpawn);
             return;
         }
     },
 
     _areEarlyWorkersNeeded(hive, room) {
         if (room.controller.level === 1) {
-            return hive.earlyWorkerCount < _.sum(room.sources, source => source.earlyGameHarvesterCount)
-                                         + _.sum(hive.remotes, r => r.max_early_workers) * 0.5;
+            return hive.population[ROLE.EARLY_WORKER] < _.sum(room.sources, source => source.earlyGameHarvesterCount)
+                                                      + _.sum(hive.remotes, r => r.max_early_workers) * 0.5;
         }
-        return hive.earlyWorkerCount < _.sum(room.sources, source => source.earlyGameHarvesterCount)
-                                     + _.sum(hive.remotes, r => r.max_early_workers);
+        return hive.population[ROLE.EARLY_WORKER] < _.sum(room.sources, source => source.earlyGameHarvesterCount)
+                                                  + _.sum(hive.remotes, r => r.max_early_workers);
     },
 
-    _areScoutsNeeded(room) {
-        return _.filter(Game.creeps, creep => creep.role === ROLE.SCOUT).length < 2;
+    _areScoutsNeeded(hive, room) {
+        return hive.population[ROLE.SCOUT] < 2;
     },
 
-    _spawnEarlyWorker(room, spawn) {
+    _spawnEarlyWorker(hive, room, spawn) {
         let body;
         if (room.energyCapacityAvailable >= 750) {
             body = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
@@ -42,16 +42,16 @@ const spawnLogic = {
         } else {
             body = [WORK, CARRY, MOVE, MOVE];
         }
-        this._spawnCreep(spawn, ROLE.EARLY_WORKER, body, {})
+        this._spawnCreep(hive, spawn, ROLE.EARLY_WORKER, body, {})
     },
 
-    _spawnScout(room, spawn) {
+    _spawnScout(hive, room, spawn) {
         let body = [MOVE];
 
-        this._spawnCreep(spawn, ROLE.SCOUT, body, {})
+        this._spawnCreep(hive, spawn, ROLE.SCOUT, body, {})
     },
 
-    _spawnCreep(spawn, role, body, memory = {}) {
+    _spawnCreep(hive, spawn, role, body, memory = {}) {
         memory.role = role;
         memory.origin = spawn.room.name;
 
@@ -59,6 +59,7 @@ const spawnLogic = {
         const result = spawn.spawnCreep(body, name, {memory: memory});
         switch (result) {
             case OK:
+                hive.increasePopulation(role);
                 Memory.creepsBuilt = Memory.creepsBuilt + 1;
                 break;
             case ERR_NOT_ENOUGH_ENERGY:

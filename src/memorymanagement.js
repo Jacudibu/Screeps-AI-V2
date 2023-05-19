@@ -20,15 +20,10 @@ const memoryManagement = {
     },
 
     _deleteRoleSpecificStuff(creepMemory) {
-        switch (creepMemory.role) {
-            case ROLE.EARLY_WORKER:
-                const hive = Hives[creepMemory.origin];
-                hive.earlyGameHarvesterCount -= 1;
-                if (creepMemory.targetRoomName !== creepMemory.origin) {
-                    hive.remotes[creepMemory.targetRoomName].current_early_workers -= 1;
-                }
-                return;
+        const hive = Hives[creepMemory.origin];
+        hive.decreasePopulation(creepMemory.role)
 
+        switch (creepMemory.role) {
             default:
                 break;
         }
