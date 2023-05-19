@@ -1,6 +1,6 @@
 const maxDistance = 3;
 
-class RemoteScanner {
+class RemotePlanner {
     static setupRemoteData(hive) {
         let discoveredRooms = this._discoverPotentialRemoteRooms(hive, maxDistance);
 
@@ -69,39 +69,35 @@ class RemoteScanner {
                 s => PathFinder.search(s.pos, hive.pos).path.length); // TODO: This ignores potential tunnels
 
         remoteData.max_early_workers = _.sum(remoteData.sourceDistance, dist => 1 + Math.trunc(dist / 50));
+        this.orderRemotesByValue(hive);
     }
 
     static orderRemotesByValue(hive) {
         const oldData = hive.remotes;
-        let values = [];
+        let dataAsArray = [];
 
         for (const name in oldData) {
-            values.push({name: name, data: oldData[name]})
+            dataAsArray.push({name: name, data: oldData[name]})
         }
 
-        values = _.sortBy(values, v => _.min(v.data.sourceDistance));
+        dataAsArray = _.sortBy(dataAsArray, v => _.min(v.data.sourceDistance));
 
         const newData = {};
-        for (const value of values) {
+        for (const value of dataAsArray) {
             newData[value.name] = value.data;
         }
 
-        return newData;
+        hive.remotes = newData;
     }
 }
 
 global.resetHiveRemotes = function() {
     for (const hiveName in Hives) {
-        RemoteScanner.setupRemoteData(Hives[hiveName]);
+        RemotePlanner.setupRemoteData(Hives[hiveName]);
         log.info(JSON.stringify(Hives[hiveName].remotes, null,  2));
         log.info(JSON.stringify(Hives[hiveName].lairs, null,  2));
     }
 };
 
-global.debugOrdering = function() {
-    for (const hiveName in Hives) {
-        log.info(JSON.stringify(RemoteScanner.orderRemotesByValue(Hives[hiveName]), null,  2));
-    }
-};
-
-module.exports = RemoteScanner;
+module.exports = RemotePlanner;
+profiler.registerClass(RemotePlanner, "RemotePlanner");

@@ -1,4 +1,4 @@
-const RemoteScanner = require("hivelogic/remotescanner");
+const RemotePlanner = require("hivelogic/remoteplanner");
 const layoutGenerator = require("hivelogic/layouts/layoutgenerator");
 global.Hives = {};
 
@@ -18,7 +18,7 @@ class Hive {
         if (Memory.hives[roomName] === undefined) {
             log.info("A new hive has been established in " + this.room + "!");
             Memory.hives[roomName] = {layout: {}};
-            RemoteScanner.setupRemoteData(this);
+            RemotePlanner.setupRemoteData(this);
 
             if (this.layout.core === undefined && hasRespawned()) {
                 log.info("Generating room layout for " + this);
@@ -94,7 +94,7 @@ class Hive {
     }
 
     refreshRemoteData(remoteData, room) {
-        RemoteScanner.evaluateRemote(this, remoteData, room);
+        RemotePlanner.evaluateRemote(this, remoteData, room);
     }
 
     increasePopulation(role) {
