@@ -8,6 +8,7 @@ require('tools/logger');
 require('tools/hasrespawned');
 
 require('globals/boosttiers');
+require('globals/constants');
 require('globals/creeptalk');
 require('globals/roles');
 require('globals/tasks');
@@ -16,6 +17,7 @@ require('globals/creepclassifications');
 const memoryCache = require('tools/memorycache');
 
 require('prototypes/creep/countbodyparts');
+require('prototypes/creep/kite');
 require('prototypes/creep/properties');
 require('prototypes/creep/tasks');
 require('prototypes/room/checkforrclupdate');

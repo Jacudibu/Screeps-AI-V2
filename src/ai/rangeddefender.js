@@ -1,4 +1,3 @@
-const {ThreatDetection} = require("../threatdetection");
 const rangedDefender = {
     run(creep) {
         switch (creep.task) {
@@ -17,14 +16,18 @@ const rangedDefender = {
 
                     creep.setTask(TASK.MOVE_TO_ROOM);
                     creep.targetRoomName = remoteName;
+                    this.run(creep);
+                    return;
                 }
 
                 if (creep.room.name !== creep.origin) {
                     creep.setTask(TASK.MOVE_TO_ROOM);
                     creep.targetRoomName = creep.origin;
+                    this.run(creep);
+                    return;
                 }
 
-                this.setTask(TASK.IDLE);
+                creep.setTask(TASK.IDLE);
                 return;
 
             case TASK.MOVE_TO_ROOM:
@@ -35,20 +38,21 @@ const rangedDefender = {
                 return;
 
             case TASK.ATTACK:
-                let target = Game.getObjectById(target);
-                if (target === undefined) {
+                let target = Game.getObjectById(creep.taskTargetId);
+                if (target === null) {
                     const hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
                     if (hostiles.length === 0) {
-                        this.setTask(TASK.DECIDE_WHAT_TO_DO);
+                        creep.setTask(TASK.DECIDE_WHAT_TO_DO);
+                        this.run(creep);
+                        return;
                     }
 
                     target = Utils.getClosestRoomObjectToPosition(creep.pos, hostiles);
                     creep.taskTargetId = target.id;
                 }
-
                 const nearbyHostiles = creep.findNearbyHostiles();
 
-                const rangeToTarget = this.pos.getRangeTo(target);
+                const rangeToTarget = creep.pos.getRangeTo(target);
                 if (rangeToTarget === 1) {
                     const result = creep.rangedMassAttack();
                     switch (result) {
@@ -59,7 +63,7 @@ const rangedDefender = {
                             }
                             return;
                         default:
-                            this.logActionError("rangedMassAttack", result);
+                            creep.logActionError("rangedMassAttack", result);
                             return;
                     }
                 }
@@ -73,11 +77,11 @@ const rangedDefender = {
                         }
                         return;
                     case ERR_NOT_IN_RANGE:
-                        this.say(creepTalk.chargeAttack, true);
-                        creep.travelTo(target.pos, {range: CREEP_RANGED_ATTACK_RANGE})
+                        creep.say(creepTalk.chargeAttack, true);
+                        creep.travelTo(target.pos, {range: CREEP_RANGED_ATTACK_RANGE});
                         return;
                     default:
-                        this.logActionError("rangedAttack against " + target, result);
+                        creep.logActionError("rangedAttack against " + target, result);
                         return;
                 }
 

@@ -1,4 +1,4 @@
-export class ThreatDetection {
+class ThreatDetection {
     static _threat = {};
     static THREAT_TYPES = {
         HARMLESS: 0,
@@ -18,7 +18,8 @@ export class ThreatDetection {
             if (hostiles.length === 0) {
                 // TODO: notify hives that threat is gone
                     // TODO: restore hive remotes
-                this._threat[room] = undefined;
+                this._threat[roomName] = undefined;
+                return;
             }
 
             let threat = {
@@ -64,7 +65,7 @@ export class ThreatDetection {
                     // TODO: evacuate hive remotes
             }
 
-            this._threat = threat;
+            this._threat[roomName] = threat;
         }
     }
 }
