@@ -153,6 +153,9 @@ const earlyWorker = {
         const hive = Hives[creep.origin];
         for (const remoteName in hive.remotes) { // TODO: this expects hives.remotes to be sorted by value to work efficiently, but will also allow us to get vision to calculate that fairly easily.
             const remote = hive.remotes[remoteName];
+            if (remote.isCenter) {
+                continue;
+            }
             if (remote.max_early_workers === undefined) {
                 remote.max_early_workers = 1;
                 remote.current_early_workers = 1;

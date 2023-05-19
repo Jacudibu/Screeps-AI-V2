@@ -5,15 +5,24 @@ class RemoteScanner {
         let discoveredRooms = this._discoverPotentialRemoteRooms(hive, maxDistance);
 
         hive.remotes = {};
-        for (const r of discoveredRooms) {
-            log.info(JSON.stringify(r));
-            if (utils.isRoomHighway(r.name)) {
+        for (const potentialRemote of discoveredRooms) {
+            if (utils.isRoomHighway(potentialRemote.name)) {
                 continue;
             }
 
-            hive.remotes[r.name] = {
-                distance: r.distance,
+            const remote = {
+                distance: potentialRemote.distance,
             };
+
+            if (utils.isRoomCenterRoom(potentialRemote.name)) {
+                remote.isCenter = true;
+            }
+
+            if (utils.isRoomSourceKeeperLair(potentialRemote.name)) {
+                remote.isKeeper = true;
+            }
+
+            hive.remotes[potentialRemote.name] = remote;
         }
     }
 

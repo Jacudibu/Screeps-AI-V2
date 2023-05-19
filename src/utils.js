@@ -46,6 +46,25 @@ class Utils {
         const parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
         return (parsed[1] % 10 === 0) || (parsed[2] % 10 === 0);
     };
+
+    // Returns true if we expect some SK Lairs in this room. Does NOT include the room at the center of the 3x3 square.
+    static isRoomSourceKeeperLair(roomName) {
+        const parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
+        const fMod = parsed[1] % 10;
+        const sMod = parsed[2] % 10;
+        return !(fMod === 5 && sMod === 5) &&
+            ((fMod >= 4) && (fMod <= 6)) &&
+            ((sMod >= 4) && (sMod <= 6));
+    };
+
+    // Returns true if the room is in the 3x3 square in the middle of the map
+    static isRoomCenterRoom(roomName) {
+        const parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
+        const fMod = parsed[1] % 10;
+        const sMod = parsed[2] % 10;
+        return ((fMod >= 4) && (fMod <= 6)) &&
+               ((sMod >= 4) && (sMod <= 6));
+    }
 }
 
 profiler.registerObject(Utils, "Utils");
