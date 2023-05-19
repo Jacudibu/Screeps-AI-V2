@@ -1,8 +1,10 @@
+/* Create a secrets-<config> file and pass --config=<config> as an argument.
+ * For screeps-world, email & token are required.
+ * For private servers, email & password.
+ **/
 module.exports = function(grunt) {
-    let config = require('./.secrets.json');
-    let branch = "main"
-    let email = grunt.option('email') || config.email;
-    let token = grunt.option('token') || config.token;
+    const config = require("./.secrets-" + grunt.option("config") + ".json");
+    console.log("Deploying to " + grunt.option("config"));
 
     // this uses github:cavejay/grunt-screeps since the official version doesn't support auth token... yet
     grunt.loadNpmTasks('grunt-screeps');
@@ -12,9 +14,11 @@ module.exports = function(grunt) {
     grunt.initConfig({
         screeps: {
             options: {
-                email: email,
-                token: token,
-                branch: branch,
+                server: config.server,
+                email: config.email,
+                password: config.password,
+                token: config.token,
+                branch: config.branch,
             },
             dist: {
                 src: ['dist/*.js']
