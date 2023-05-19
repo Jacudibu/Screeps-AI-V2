@@ -1,30 +1,37 @@
+const maxDistance = 3;
+
 class RemoteScanner {
     static setupRemoteData(hive) {
         const mainRoomNeighbors = Game.map.describeExits(hive.roomName);
-        let neighborRooms = [];
 
-        // This currently hardcodes remote distance to 2, but that shouldn't be a problem...
-        for (const dir in mainRoomNeighbors) {
-            const roomName = mainRoomNeighbors[dir];
+        let discoveredRooms = [];
+        let queue = [{name: hive.roomName, distance: 0}];
 
-            neighborRooms.push({name: roomName, distance: 1});
-            const neighborNeighbors = Game.map.describeExits(roomName);
-            for (const dirdir in neighborNeighbors) {
-                const neighborName = neighborNeighbors[dirdir];
-                if (neighborName === hive.roomName) {
+        while (queue.length > 0) {
+            const current = queue.shift()
+            discoveredRooms.push(current);
+
+            const neighbors = Game.map.describeExits(current.name);
+            for (const x in neighbors) {
+                const neighborName = neighbors[x];
+                if (_.any(discoveredRooms, x => x.name === neighborName)) {
                     continue;
                 }
 
-                if (_.contains(neighborRooms, neighborName)) {
-                    continue;
-                }
+                const obj = {name: neighborName, distance: current.distance + 1}
+                discoveredRooms.push(obj);
 
-                neighborRooms.push({name: neighborName, distance: 2});
+                if (obj.distance < maxDistance) {
+                    queue.push(obj);
+                }
             }
         }
 
+        discoveredRooms.shift(); // getting rid of the hive room itself which was added in the first step
+
         hive.remotes = {};
-        for (const r of neighborRooms) {
+        for (const r of discoveredRooms) {
+            log.info(JSON.stringify(r));
             if (utils.isRoomHighway(r.name)) {
                 continue;
             }
@@ -66,6 +73,7 @@ class RemoteScanner {
 global.resetHiveRemotes = function() {
     for (const hiveName in Hives) {
         RemoteScanner.setupRemoteData(Hives[hiveName]);
+        log.info(JSON.stringify(Hives[hiveName].remotes, null,  2));
     }
 }
 
