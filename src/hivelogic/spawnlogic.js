@@ -24,7 +24,6 @@ const spawnLogic = {
 
         if (this._areScoutsNeeded(hive, room)) {
             this._spawnScout(hive, room, idleSpawn);
-
         }
     },
 

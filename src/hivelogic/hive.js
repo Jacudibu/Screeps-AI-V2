@@ -9,7 +9,11 @@ class Hive {
     constructor(roomName) {
         Hives[roomName] = this;
         this._roomName = roomName;
+
         this.population = {};
+        for (const role in ROLE) {
+            this.population[ROLE[role]] = 0;
+        }
 
         if (Memory.hives[roomName] === undefined) {
             log.info("A new hive has been established in " + this.room + "!");
@@ -142,9 +146,6 @@ global.getHive = function() {
 for (const creepName in Memory.creeps) {
     const creep = Memory.creeps[creepName];
     const hive = Hives[creep.origin];
-    for (const role in ROLE) {
-        hive.population[ROLE[role]] = 0;
-    }
 
     hive.increasePopulation(creep.role);
 }
