@@ -39,12 +39,14 @@ const hiveMind = require("hivelogic/hivemind");
 const creepAi = require("creepai");
 
 module.exports.loop = memoryCache(function() {
-    if (Game.cpu.bucket === 10000 && Game.cpu.generatePixel !== undefined) {
-        Game.cpu.generatePixel();
-    }
+    profiler.wrap( function() {
+        if (Game.cpu.bucket === 10000 && Game.cpu.generatePixel !== undefined) {
+            Game.cpu.generatePixel();
+        }
 
-    memoryManagement.run();
-    ThreatDetection.run();
-    hiveMind.run();
-    creepAi.run();
+        memoryManagement.run();
+        ThreatDetection.run();
+        hiveMind.run();
+        creepAi.run();
+    })
 });
