@@ -46,10 +46,8 @@ class RemoteScanner {
     }
 
     static evaluateRemote(hive, remoteData, room) {
-        const storagePos = hive.layout.core.storage[0];
-        const hiveRoomStoragePosition = new RoomPosition(storagePos.x, storagePos.y, hive.roomName);
         remoteData.sourceDistance = _.map(room.sources,
-                s => PathFinder.search(s.pos, hiveRoomStoragePosition, {maxRooms: remoteData.distance + 1}).path.length); // TODO: This ignores potential tunnels
+                s => PathFinder.search(s.pos, hive.pos, {maxRooms: remoteData.distance + 1}).path.length); // TODO: This ignores potential tunnels
 
         remoteData.max_early_workers = _.sum(remoteData.sourceDistance, dist => 1 + Math.trunc(dist / 50));
     }

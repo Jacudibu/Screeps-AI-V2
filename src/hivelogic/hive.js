@@ -23,7 +23,8 @@ class Hive {
             }
         }
 
-        this.pos = new RoomPosition(4, 4, roomName)
+        const storagePos = this.layout.core.storage[0];
+        this.pos  = new RoomPosition(storagePos.x, storagePos.y - 1, roomName);
     }
 
     // The name of this hive's room.
