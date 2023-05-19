@@ -21,12 +21,6 @@ const memoryManagement = {
 
     _deleteRoleSpecificStuff(creepMemory) {
         switch (creepMemory.role) {
-            case ROLE.SCOUT:
-                if (creepMemory.task === TASK.MOVE_TO_ROOM) {
-                    delete Memory.rooms[creepMemory.targetRoomName].isScoutOnRoute;
-                }
-                return;
-
             case ROLE.EARLY_WORKER:
                 const hive = Hives[creepMemory.origin];
                 hive.earlyGameHarvesterCount -= 1;

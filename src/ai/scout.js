@@ -1,9 +1,13 @@
+const isScoutOnRoute = {};
+const scoutOnRouteTimeout = 100;
+
 /* This creep will walk from one room to another and take notes in memory.rooms about the room's owner, source count and mineral.
  */
 const scout = {
     run(creep) {
         switch (creep.task) {
             case TASK.DECIDE_WHAT_TO_DO:
+                delete isScoutOnRoute[creep.room.name];
                 creep.room.updateScoutData();
                 if (creep.room.controller) {
                     const sign = creep.room.controller.sign;
@@ -87,7 +91,7 @@ const scout = {
                 break;
             }
 
-            if (roomMemory.isScoutOnRoute) {
+            if (isScoutOnRoute[roomName] && isScoutOnRoute[roomName] > Game.time - scoutOnRouteTimeout) {
                 continue;
             }
 
@@ -115,7 +119,7 @@ const scout = {
             Memory.rooms[targetRoom] = {};
         }
 
-        Memory.rooms[targetRoom].isScoutOnRoute = true;
+        isScoutOnRoute[targetRoom] = Game.time;
         creep.targetRoomName = targetRoom;
 
         creep.setTask(TASK.MOVE_TO_ROOM);

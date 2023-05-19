@@ -69,8 +69,6 @@ const scoutData = {
 };
 
 Room.prototype.updateScoutData = function() {
-    delete this.memory.isScoutOnRoute;
-
     const oldScoutData = this.memory.scoutData;
     let newScoutData;
 
