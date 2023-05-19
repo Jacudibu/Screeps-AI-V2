@@ -5,24 +5,22 @@ class RemoteScanner {
         let discoveredRooms = this._discoverPotentialRemoteRooms(hive, maxDistance);
 
         hive.remotes = {};
+        hive.lairs = {};
         for (const potentialRemote of discoveredRooms) {
-            if (utils.isRoomHighway(potentialRemote.name)) {
+            if (Utils.isRoomHighway(potentialRemote.name)) {
                 continue;
             }
 
-            const remote = {
+            if (Utils.isRoomCenterRoom(potentialRemote.name)) {
+                if (Utils.isRoomSourceKeeperLair(potentialRemote.name)) {
+                    hive.lairs[potentialRemote.name] = {distance: potentialRemote.distance};
+                }
+                continue;
+            }
+
+            hive.remotes[potentialRemote.name] = {
                 distance: potentialRemote.distance,
             };
-
-            if (utils.isRoomCenterRoom(potentialRemote.name)) {
-                remote.isCenter = true;
-            }
-
-            if (utils.isRoomSourceKeeperLair(potentialRemote.name)) {
-                remote.isKeeper = true;
-            }
-
-            hive.remotes[potentialRemote.name] = remote;
         }
     }
 
@@ -84,6 +82,7 @@ global.resetHiveRemotes = function() {
     for (const hiveName in Hives) {
         RemoteScanner.setupRemoteData(Hives[hiveName]);
         log.info(JSON.stringify(Hives[hiveName].remotes, null,  2));
+        log.info(JSON.stringify(Hives[hiveName].lairs, null,  2));
     }
 }
 

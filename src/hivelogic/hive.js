@@ -76,6 +76,19 @@ class Hive {
         }
     }
 
+    // The source keeper lair rooms available to this hive's room.
+    get lairs() {
+        return this.memory.lairs;
+    }
+
+    set lairs(value) {
+        if (value) {
+            this.memory.lairs = value;
+        } else {
+            delete this.memory.lairs;
+        }
+    }
+
     refreshRemoteData(remoteData, room) {
         RemoteScanner.evaluateRemote(this, remoteData, room);
     }

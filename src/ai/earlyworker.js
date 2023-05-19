@@ -153,9 +153,6 @@ const earlyWorker = {
         const hive = Hives[creep.origin];
         for (const remoteName in hive.remotes) { // TODO: this expects hives.remotes to be sorted by value to work efficiently, but will also allow us to get vision to calculate that fairly easily.
             const remote = hive.remotes[remoteName];
-            if (remote.isCenter) {
-                continue;
-            }
             if (remote.max_early_workers === undefined) {
                 remote.max_early_workers = 1;
                 remote.current_early_workers = 1;
@@ -180,7 +177,7 @@ const earlyWorker = {
 
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];
-            const creepsAssignedToSource = utils.count(allEarlyWorkers, creep => creep.taskTargetId === source.id);
+            const creepsAssignedToSource = Utils.count(allEarlyWorkers, creep => creep.taskTargetId === source.id);
 
             if (creepsAssignedToSource < source.earlyGameHarvesterCount){
                 return source;
@@ -202,9 +199,9 @@ const earlyWorker = {
 
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];
-            const creepsAssignedToSource = utils.count(allEarlyWorkers, creep => creep.taskTargetId === source.id);
+            const creepsAssignedToSource = Utils.count(allEarlyWorkers, creep => creep.taskTargetId === source.id);
 
-            if (creepsAssignedToSource < utils.countFreeTilesAroundRoomObject(source)) { // TODO: source.remoteWorkerCount(hive) or something like that
+            if (creepsAssignedToSource < Utils.countFreeTilesAroundRoomObject(source)) { // TODO: source.remoteWorkerCount(hive) or something like that
                 return source;
             }
         }

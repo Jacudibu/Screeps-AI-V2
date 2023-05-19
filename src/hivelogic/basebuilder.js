@@ -59,7 +59,7 @@ function canStructureBeBuilt(layout, room, structureType) {
     }
 
     const rcl = room.controller.level;
-    const existingStructureCount = utils.count(room.find(FIND_MY_STRUCTURES), structure => structure.structureType === structureType);
+    const existingStructureCount = Utils.count(room.find(FIND_MY_STRUCTURES), structure => structure.structureType === structureType);
 
     if (existingStructureCount >= CONTROLLER_STRUCTURES[structureType][rcl]) {
         return false;

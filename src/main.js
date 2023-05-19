@@ -10,7 +10,6 @@ require('tools/hasrespawned')
 require('globals/creeptalk')
 require('globals/roles')
 require('globals/tasks')
-require('globals/utility')
 
 const memoryCache = require('tools/memorycache')
 

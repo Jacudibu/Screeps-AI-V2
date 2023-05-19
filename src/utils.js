@@ -68,4 +68,4 @@ class Utils {
 }
 
 profiler.registerObject(Utils, "Utils");
-global.utils = Utils;
+global.Utils = Utils;
