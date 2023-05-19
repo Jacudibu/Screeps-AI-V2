@@ -20,6 +20,7 @@ class RemoteScanner {
 
             hive.remotes[potentialRemote.name] = {
                 distance: potentialRemote.distance,
+                max_early_workers: 1,
             };
         }
     }
