@@ -5,4 +5,4 @@ You can watch the AI in action over here: https://screeps.com/a/#!/profile/Jacud
 
 Learning from previous mistakes, this iteration will be completely autonomous right from the get go – the goal is that I won't enter any non-diagnostic stuff into the console whatsoever, and treat the memory view as read-only. Let's see how well that goes!
 
-## Please do not just copy this codebase and use it as your own on the public server. That's lame. :)
+## Please do not just copy this codebase and use it as your own on the public server. That's lame... Aaaand there are way better AIs out there! :)
