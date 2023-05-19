@@ -56,7 +56,7 @@ const hiveMind = {
             }
         }
 
-        if (DEBUG_ROOM_LAYOUTS) {
+        if (Memory.settings.drawHiveLayout) {
             layoutGenerator.drawLayout(room.visual, hive.layout);
         }
     },

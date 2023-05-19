@@ -37,6 +37,8 @@ const memoryManagement = {
     _detectRespawn() {
         if (hasRespawned()) {
             log.warning("====== Respawn detected ======");
+            const oldSettings = Memory.settings || {};
+
             for (const i in Memory) {
                 delete Memory[i];
             }
@@ -51,6 +53,8 @@ const memoryManagement = {
             Memory.creepsBuilt = 0;
             Memory.globalTick = Game.time;
             Memory.respawnTick = Game.time;
+
+            Memory.settings = oldSettings;
 
             Hive.onRespawn();
         }

@@ -3,6 +3,7 @@ require('tools/traveler');
 require('tools/roomvisual');
 
 require('clienthacks/clickabletostring');
+require('console');
 
 require('tools/logger');
 require('tools/hasrespawned');
