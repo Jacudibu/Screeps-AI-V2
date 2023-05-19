@@ -1,6 +1,6 @@
-const baseBuilder = require('hivelogic/basebuilder')
+const baseBuilder = require('hivelogic/basebuilder');
 const spawnLogic = require('hivelogic/spawnlogic');
-const layoutGenerator = require('hivelogic/layouts/layoutgenerator')
+const layoutGenerator = require('hivelogic/layouts/layoutgenerator');
 
 const DEBUG_ROOM_LAYOUTS = true;
 
@@ -27,7 +27,7 @@ const hiveMind = {
         const room = hive.room;
         if (room === undefined) {
             log.warning("Lost hive in room " + room);
-            delete Hives[hive.roomName]
+            delete Hives[hive.roomName];
             return;
         }
 
@@ -60,7 +60,7 @@ const hiveMind = {
             layoutGenerator.drawLayout(room.visual, hive.layout);
         }
     },
-}
+};
 
 profiler.registerObject(hiveMind, "hiveMind");
 module.exports = hiveMind;

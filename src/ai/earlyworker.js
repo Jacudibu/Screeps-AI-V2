@@ -15,9 +15,9 @@ const earlyWorker = {
             case TASK.HARVEST_ENERGY: return this._harvestEnergy(creep);
             case TASK.HARVEST_REMOTE_ENERGY: return this._harvestRemoteEnergy(creep);
             case TASK.DEPOSIT_ENERGY: return this._depositEnergy(creep);
-            case TASK.BUILD: return this._build(creep)
-            case TASK.UPGRADE_CONTROLLER: return this._upgradeController(creep)
-            case TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES: return this._upgradeControllerButLookOutForConstructionSites(creep)
+            case TASK.BUILD: return this._build(creep);
+            case TASK.UPGRADE_CONTROLLER: return this._upgradeController(creep);
+            case TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES: return this._upgradeControllerButLookOutForConstructionSites(creep);
             default: {
                 // TODO: error handling
                 this._getMoreEnergy(creep);
@@ -67,7 +67,7 @@ const earlyWorker = {
             return;
         }
 
-        target = this._findConstructionSite(creep)
+        target = this._findConstructionSite(creep);
         if (target !== undefined) {
             creep.setTask(TASK.BUILD, target.id);
             return;
@@ -203,7 +203,7 @@ const earlyWorker = {
             }
         }
 
-        log.warning(creep + "Unable to determine which source to pick in remote " + creep.room.name + ", choosing the first one instead...")
+        log.warning(creep + "Unable to determine which source to pick in remote " + creep.room.name + ", choosing the first one instead...");
         return sources[0];
     },
 
@@ -250,7 +250,7 @@ const earlyWorker = {
                 break;
             default:
                 log.warning(creep + "upgrading controller" + " " + creep.upgradeController(creep.room.controller));
-                creep.setTask(TASK.DEPOSIT_ENERGY, undefined)
+                creep.setTask(TASK.DEPOSIT_ENERGY, undefined);
                 break;
         }
     },
@@ -269,4 +269,4 @@ const earlyWorker = {
 };
 
 module.exports = earlyWorker;
-profiler.registerObject(earlyWorker, "earlyWorker")
+profiler.registerObject(earlyWorker, "earlyWorker");

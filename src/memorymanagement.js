@@ -21,7 +21,7 @@ const memoryManagement = {
 
     _deleteRoleSpecificStuff(creepMemory) {
         const hive = Hives[creepMemory.origin];
-        hive.decreasePopulation(creepMemory.role)
+        hive.decreasePopulation(creepMemory.role);
 
         switch (creepMemory.role) {
             default:
@@ -59,7 +59,7 @@ const memoryManagement = {
             log.warning("====== Global reset detected ======");
         }
     }
-}
+};
 
 profiler.registerObject(memoryManagement, "memoryManagement");
 module.exports = memoryManagement;

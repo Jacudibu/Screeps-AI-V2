@@ -17,7 +17,7 @@ class Hive {
             RemoteScanner.setupRemoteData(this);
 
             if (this.layout.core === undefined && hasRespawned()) {
-                log.info("Generating room layout for " + this)
+                log.info("Generating room layout for " + this);
                 this.layout.core = layoutGenerator.generateCoreLayoutForRespawnRoom(this.room);
                 layoutGenerator.generateHiveRoads(this, this.room);
             }
@@ -131,13 +131,13 @@ class Hive {
 Hive.onGlobalReset();
 
 module.exports = Hive;
-profiler.registerClass(Hive, "Hive")
+profiler.registerClass(Hive, "Hive");
 
 global.getHive = function() {
     for (const hive in Hives) {
         return Hives[hive];
     }
-}
+};
 
 for (const creepName in Memory.creeps) {
     const creep = Memory.creeps[creepName];

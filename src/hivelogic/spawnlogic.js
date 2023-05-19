@@ -16,7 +16,7 @@ const spawnLogic = {
 
         if (this._areScoutsNeeded(hive, room)) {
             this._spawnScout(hive, room, idleSpawn);
-            return;
+
         }
     },
 
@@ -66,7 +66,7 @@ const spawnLogic = {
                 break;
         }
     }
-}
+};
 
 profiler.registerObject(spawnLogic, "spawnLogic");
 module.exports = spawnLogic;

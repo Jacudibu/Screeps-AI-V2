@@ -130,7 +130,7 @@ Room.prototype._checkRoomCache = function _checkRoomCache(){
             roomStructures[this.name][i] = _.map(roomStructures[this.name][i], s=>s.id);
         }
     }
-}
+};
 
 multipleList.forEach(function(type){
     Object.defineProperty(Room.prototype, type+'s', {
@@ -186,7 +186,7 @@ Room.prototype._checkMyRoomCache = function _checkMyRoomCache(){
             myRoomStructures[this.name][i] = _.map(myRoomStructures[this.name][i], s=>s.id);
         }
     }
-}
+};
 
 Room.prototype._checkHostileRoomCache = function _checkHostileRoomCache(){
     // if cache is expired or doesn't exist
@@ -198,7 +198,7 @@ Room.prototype._checkHostileRoomCache = function _checkHostileRoomCache(){
             hostileRoomStructures[this.name][i] = _.map(hostileRoomStructures[this.name][i], s=>s.id);
         }
     }
-}
+};
 
 ownedMultipleList.forEach(function(type){
     const propName = "my" + _.capitalize(type) +'s';

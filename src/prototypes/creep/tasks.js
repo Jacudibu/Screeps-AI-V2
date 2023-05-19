@@ -6,12 +6,12 @@ Creep.prototype.setTask = function(task, newTargetId) {
 Creep.prototype.resetTask = function() {
     this.taskTargetId = undefined;
     this.task = undefined;
-}
+};
 
 global.TASK_RESULT = {
     TARGET_REACHED: 100,
     CONTINUE_MOVING: 101,
-}
+};
 
 Creep.prototype.moveToRoom = function(options = undefined) {
     const roomName = this.targetRoomName;

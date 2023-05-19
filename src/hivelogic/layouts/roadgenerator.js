@@ -35,7 +35,7 @@ const roadGenerator = {
 
         const roomCallback = function(roomName) {
             return roadGenerator._roomCallback(hive, roomName);
-        }
+        };
 
         hive.layout.roads = {};
         hive.layout.roads.sources = [];
@@ -59,7 +59,7 @@ const roadGenerator = {
             plainCost: COST_PLAIN,
             swampCost: COST_SWAMP,
             roomCallback: roomCallback
-        })
+        });
 
         const path = [];
         for (const pos of result.path) {
@@ -178,7 +178,7 @@ const roadGenerator = {
         }
     }
 
-}
+};
 
 module.exports = roadGenerator;
-profiler.registerObject(roadGenerator, "roadGenerator")
+profiler.registerObject(roadGenerator, "roadGenerator");

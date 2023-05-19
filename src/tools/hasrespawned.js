@@ -67,4 +67,4 @@
     // if all cases point to a respawn, you've respawned
     // Memory.respawnTick = Game.time; --- Moved into memoryManagement so things look nicely ordered in memory view... :)
     return true;
-}
+};

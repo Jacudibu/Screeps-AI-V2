@@ -110,7 +110,7 @@ const scout = {
             if (availableRooms.length > 0) {
                 targetRoom = availableRooms[_.random(0, availableRooms.length - 1)];
             } else { // must be sim.
-                creep.setTask(TASK.IDLE)
+                creep.setTask(TASK.IDLE);
                 return;
             }
         }
@@ -127,4 +127,4 @@ const scout = {
 };
 
 module.exports = scout;
-profiler.registerObject(scout, "scout")
+profiler.registerObject(scout, "scout");

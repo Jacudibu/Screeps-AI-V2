@@ -43,4 +43,4 @@ global.creepTalk.unassigned14            = "⊙ω⊙";
 global.creepTalk.unassigned15            = "ಠ_ಠ";
 global.creepTalk.unassigned16            = "♪♫♬";
 
-global.creepTalk.cookie                  = "🍪"
+global.creepTalk.cookie                  = "🍪";

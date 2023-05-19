@@ -30,7 +30,7 @@ class RemoteScanner {
         let queue = [{name: hive.roomName, distance: 0}];
 
         while (queue.length > 0) {
-            const current = queue.shift()
+            const current = queue.shift();
             discoveredRooms.push(current);
 
             const neighbors = Game.map.describeExits(current.name);
@@ -40,7 +40,7 @@ class RemoteScanner {
                     continue;
                 }
 
-                const obj = {name: neighborName, distance: current.distance + 1}
+                const obj = {name: neighborName, distance: current.distance + 1};
                 discoveredRooms.push(obj);
 
                 if (obj.distance < maxDistance) {
@@ -85,12 +85,12 @@ global.resetHiveRemotes = function() {
         log.info(JSON.stringify(Hives[hiveName].remotes, null,  2));
         log.info(JSON.stringify(Hives[hiveName].lairs, null,  2));
     }
-}
+};
 
 global.debugOrdering = function() {
     for (const hiveName in Hives) {
         log.info(JSON.stringify(RemoteScanner.orderRemotesByValue(Hives[hiveName]), null,  2));
     }
-}
+};
 
 module.exports = RemoteScanner;
