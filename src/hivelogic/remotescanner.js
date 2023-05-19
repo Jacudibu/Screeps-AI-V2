@@ -21,6 +21,7 @@ class RemoteScanner {
             hive.remotes[potentialRemote.name] = {
                 route: potentialRemote.route,
                 max_early_workers: 1,
+                current_early_workers: 0,
             };
         }
     }
@@ -40,7 +41,7 @@ class RemoteScanner {
                     continue;
                 }
 
-                const obj = {name: neighborName, distance: current.distance + 1, route: current};
+                const obj = {name: neighborName, distance: current.distance + 1, route: current.name};
                 discoveredRooms.push(obj);
 
                 if (obj.distance < maxDistance) {

@@ -43,7 +43,6 @@ const rangedDefender = {
                     const hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
                     if (hostiles.length === 0) {
                         creep.setTask(TASK.DECIDE_WHAT_TO_DO);
-                        this.run(creep);
                         return;
                     }
 
