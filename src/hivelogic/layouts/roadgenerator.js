@@ -53,8 +53,8 @@ const roadGenerator = {
         }
     },
 
-    _getPathTo(hive, room, target, goals, roomCallback) {
-        const result = PathFinder.search(target.pos, goals, {
+    _getPathTo(hive, room, target, existingCoreRoads, roomCallback) {
+        const result = PathFinder.search(target.pos, existingCoreRoads, {
             maxRooms: 1,
             plainCost: COST_PLAIN,
             swampCost: COST_SWAMP,
@@ -70,6 +70,11 @@ const roadGenerator = {
             path.push({x: pos.x, y: pos.y});
             costMatrixCache[room.name].set(pos.x, pos.y, COST_ROAD);
         }
+
+        if (path.length > 0) {
+            path.shift();
+        }
+
         return path;
     },
 
