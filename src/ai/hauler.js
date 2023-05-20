@@ -73,12 +73,13 @@ const hauler = {
 
         const distanceToTarget = creep.pos.getRangeTo(targetPos);
         if (distanceToTarget === requiredDistance) {
-            if (creep.move(other) === ERR_TIRED) {
-                // TODO: Make it so that our hauler is always empty when "hauling" workers, so this cannot happen.
+            if (creep.move(other) !== OK) {
                 return;
             }
             creep.pull(other);
-            other.move(creep);
+            if (other.move(creep) !== OK) {
+                return;
+            }
 
             creep.say(creepTalk.raisedArms, true);
             creep.setTask(TASK.DECIDE_WHAT_TO_DO);
@@ -86,7 +87,7 @@ const hauler = {
             return;
         }
 
-        if (creep.travelTo(targetPos) === ERR_TIRED) {
+        if (creep.travelTo(targetPos) !== OK) {
             // TODO: Make it so that our hauler is always empty when "hauling" workers, so this cannot happen.
             return;
         }
