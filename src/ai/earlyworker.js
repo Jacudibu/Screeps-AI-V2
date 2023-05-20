@@ -14,6 +14,7 @@ const earlyWorker = {
                 return;
             case TASK.HARVEST_ENERGY: return this._harvestEnergy(creep);
             case TASK.HARVEST_REMOTE_ENERGY: return this._harvestRemoteEnergy(creep);
+            case TASK.PICK_UP_ENERGY: return this._pickUpEnergy(creep);
             case TASK.DEPOSIT_ENERGY: return this._depositEnergy(creep);
             case TASK.BUILD: return this._build(creep);
             case TASK.UPGRADE_CONTROLLER: return this._upgradeController(creep);
@@ -22,6 +23,36 @@ const earlyWorker = {
                 // TODO: error handling
                 this._getMoreEnergy(creep);
             }
+        }
+    },
+
+    _pickUpEnergy(creep) {
+        if (creep.store.getFreeCapacity() === 0) {
+            this._figureOutHowToUseEnergy(creep);
+            return;
+        }
+
+        const target = Game.getObjectById(creep.taskTargetId);
+        const result = creep.pickup(target);
+        switch (result) {
+            case OK:
+                creep.setTask(TASK.DECIDE_WHAT_TO_DO);
+                return;
+
+            case ERR_INVALID_TARGET:
+                if (creep.store.getUsedCapacity() > 0) {
+                    this._figureOutHowToUseEnergy(creep);
+                } else {
+                    this._getMoreEnergy(creep);
+                }
+                return;
+
+            case ERR_NOT_IN_RANGE:
+                creep.travelTo(target);
+                return;
+
+            default:
+                creep.logActionError("pickup", result);
         }
     },
 
@@ -143,7 +174,13 @@ const earlyWorker = {
     },
 
     _getMoreEnergy(creep) {
-        // TODO: Search for drops or containers / tombstones / storage to pick up instead of mining
+        // TODO: Search for containers / tombstones / storage to pick up instead of mining
+        const drops = creep.room.find(FIND_DROPPED_RESOURCES, {filter: x => x.resourceType === RESOURCE_ENERGY && x.amount > 25});
+        if (drops.length > 0) {
+            creep.setTask(TASK.PICK_UP_ENERGY, drops[0].id);
+            this.run(creep);
+            return;
+        }
 
         const source = creep.room.name === creep.origin ? this._findFreeHarvestableSource(creep) : this._findHarvestableRemoteSource(creep);
         if (source !== undefined) {
