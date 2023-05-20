@@ -17,6 +17,10 @@ const spawnLogic = {
             return;
         }
 
+        if (this._areHaulersNeeded(hive, room)) {
+            this._spawnHauler(hive, room, idleSpawn);
+        }
+
         if (this._areHarvestersNeeded(hive, room)) {
             this._spawnHarvester(hive, room, idleSpawn);
         }
@@ -52,6 +56,21 @@ const spawnLogic = {
         this._spawnCreep(hive, spawn, ROLE.EARLY_WORKER, body, {})
     },
 
+    _areHaulersNeeded(hive, room) {
+        if (room.energyCapacityAvailable < 550) {
+            return false;
+        }
+
+        return hive.population[ROLE.HAULER] < 1; // TODO: Maybe increase to 2 at RCL3 or make it dependant on alive harvester count
+    },
+
+    _spawnHauler(hive, room, spawn) {
+        const pattern = [CARRY, MOVE];
+        const body = this._createCreepBodyByRepeatedPattern(pattern, room);
+
+        this._spawnCreep(hive, spawn, ROLE.HAULER, body, {})
+    },
+
     _areHarvestersNeeded(hive, room) {
         if (room.energyCapacityAvailable < 550) {
             return false;
@@ -66,18 +85,24 @@ const spawnLogic = {
     },
 
     _spawnRangedDefender(hive, room, spawn) {
-        const repeatingParts = [RANGED_ATTACK, MOVE];
-        const partCosts = _.sum(repeatingParts, x => BODYPART_COST[x]);
+        const pattern = [RANGED_ATTACK, MOVE];
+        const body = this._createCreepBodyByRepeatedPattern(pattern, room);
+
+        this._spawnCreep(hive, spawn, ROLE.RANGED_DEFENDER, body, {})
+    },
+
+    _createCreepBodyByRepeatedPattern: function (pattern, room) {
+        const partCosts = _.sum(pattern, x => BODYPART_COST[x]);
 
         const body = [];
         let remainingCapacity = room.energyCapacityAvailable;
 
-        while (remainingCapacity - partCosts > 0 && body.length + repeatingParts.length < 50) {
-            body.push(...repeatingParts);
+        while (remainingCapacity - partCosts > 0 && body.length + pattern.length < 50) {
+            body.push(...pattern);
             remainingCapacity -= partCosts;
         }
 
-        this._spawnCreep(hive, spawn, ROLE.RANGED_DEFENDER, body, {})
+        return body;
     },
 
     _spawnScout(hive, room, spawn) {
