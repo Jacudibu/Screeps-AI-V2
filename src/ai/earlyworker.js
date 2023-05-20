@@ -171,11 +171,20 @@ const earlyWorker = {
     },
 
     _findFreeHarvestableSource(creep) {
+        const allHarvesters = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.HARVESTER});
+        if (allHarvesters.length >= creep.room.sources.length) {
+            return undefined;
+        }
+
         const allEarlyWorkers = creep.room.find(FIND_MY_CREEPS, { filter: creep => creep.role === ROLE.EARLY_WORKER});
         const sources = _.sortBy(creep.room.sources, source => source.distanceToSpawn);
 
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];
+            if (_.any(allHarvesters, x => x.taskTargetId === source.id)) {
+                continue;
+            }
+
             const creepsAssignedToSource = Utils.count(allEarlyWorkers, creep => creep.taskTargetId === source.id);
 
             if (creepsAssignedToSource < source.earlyGameHarvesterCount){
