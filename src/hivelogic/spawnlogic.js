@@ -19,10 +19,12 @@ const spawnLogic = {
 
         if (this._areHaulersNeeded(hive, room)) {
             this._spawnHauler(hive, room, idleSpawn);
+            return;
         }
 
         if (this._areHarvestersNeeded(hive, room)) {
             this._spawnHarvester(hive, room, idleSpawn);
+            return;
         }
 
         if (this._areEarlyWorkersNeeded(hive, room)) {
@@ -32,6 +34,7 @@ const spawnLogic = {
 
         if (this._areScoutsNeeded(hive, room)) {
             this._spawnScout(hive, room, idleSpawn);
+            return;
         }
     },
 
@@ -72,7 +75,7 @@ const spawnLogic = {
     },
 
     _areHarvestersNeeded(hive, room) {
-        if (room.energyCapacityAvailable < 550) {
+        if (room.energyCapacityAvailable < 500) {
             return false;
         }
 
@@ -80,7 +83,7 @@ const spawnLogic = {
     },
 
     _spawnHarvester(hive, room, spawn) {
-        const body = [WORK, WORK, WORK, WORK, WORK, MOVE];
+        const body = [WORK, WORK, WORK, WORK, WORK];
         this._spawnCreep(hive, spawn, ROLE.HARVESTER, body, {})
     },
 

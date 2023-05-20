@@ -47,20 +47,30 @@ const hauler = {
         }
 
         const target = Game.getObjectById(other.taskTargetId);
-        const distanceToTarget = creep.pos.getRangeTo(target.pos);
-        if (distanceToTarget === 1) {
+        let targetPos = target.pos;
+        let requiredDistance = 1;
+        if (target instanceof Source) {
+            const containerPos = target.nearbyContainerPosition;
+            if (containerPos !== undefined) {
+                targetPos = containerPos;
+                requiredDistance = 0;
+            }
+        }
+
+        const distanceToTarget = creep.pos.getRangeTo(targetPos);
+        if (distanceToTarget === requiredDistance) {
             // Swap positions and be done!
             creep.move(other);
             creep.pull(other);
             other.move(creep);
 
             creep.say(creepTalk.raisedArms, true);
-            other.setTask(TASK.FINISHED_GETTING_PULLED, other.taskTargetId);
             creep.setTask(TASK.DECIDE_WHAT_TO_DO);
+            other.setTask(TASK.FINISHED_GETTING_PULLED, other.taskTargetId);
             return;
         }
 
-        creep.travelTo(target);
+        creep.travelTo(targetPos);
         creep.pull(other);
         other.move(creep);
         creep.say(creep.ticksToLive % 2 === 0 ? creepTalk.run1 : creepTalk.run2, true);
