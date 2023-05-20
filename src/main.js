@@ -32,6 +32,7 @@ require('prototypes/source/distancetospawn');
 require('prototypes/source/nearbycontainer');
 require('prototypes/source/earlygameharvestercount');
 require('prototypes/structure/canstillstoreenergy');
+require('prototypes/resource/incomingearlyworker');
 
 require('threatdetection');
 require('utils');
