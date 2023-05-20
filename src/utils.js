@@ -65,6 +65,10 @@ class Utils {
         return ((fMod >= 4) && (fMod <= 6)) &&
                ((sMod >= 4) && (sMod <= 6));
     }
+
+    static randomFromArray(array) {
+        return array[_.random(0, array.length - 1)];
+    }
 }
 
 profiler.registerObject(Utils, "Utils");

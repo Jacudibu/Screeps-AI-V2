@@ -27,15 +27,11 @@ const earlyWorker = {
     },
 
     _pickUpEnergy(creep) {
-        if (creep.store.getFreeCapacity() === 0) {
-            this._figureOutHowToUseEnergy(creep);
-            return;
-        }
-
         const target = Game.getObjectById(creep.taskTargetId);
         const result = creep.pickup(target);
         switch (result) {
             case OK:
+                target.incomingEarlyWorkerTick = 0;
                 creep.setTask(TASK.DECIDE_WHAT_TO_DO);
                 return;
 
@@ -128,7 +124,7 @@ const earlyWorker = {
 
         const extensions = _.filter(creep.room.myExtensions, extension => extension.canStillStoreEnergy());
         if (extensions.length > 0) {
-            return extensions[_.random(0, extensions.length - 1)];
+            return Utils.randomFromArray(extensions);
         }
 
         const towers = _.filter(creep.room.myTowers, tower => tower.canStillStoreEnergy());
@@ -175,9 +171,15 @@ const earlyWorker = {
 
     _getMoreEnergy(creep) {
         // TODO: Search for containers / tombstones / storage to pick up instead of mining
-        const drops = creep.room.find(FIND_DROPPED_RESOURCES, {filter: x => x.resourceType === RESOURCE_ENERGY && x.amount > 25});
+        const drops = creep.room.find(FIND_DROPPED_RESOURCES, {
+            filter: x => x.resourceType === RESOURCE_ENERGY
+                && x.amount > 25
+                && x.incomingEarlyWorkerTick + 25 < Game.time
+        });
         if (drops.length > 0) {
-            creep.setTask(TASK.PICK_UP_ENERGY, drops[_.random(0, drops.length - 1)].id);
+            const drop = Utils.randomFromArray(drops);
+            drop.incomingEarlyWorkerTick = Game.time;
+            creep.setTask(TASK.PICK_UP_ENERGY, drop.id);
             this.run(creep);
             return;
         }
