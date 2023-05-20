@@ -27,6 +27,11 @@ const earlyWorker = {
     },
 
     _pickUpEnergy(creep) {
+        if (creep.store.getFreeCapacity() === 0) {
+            this._figureOutHowToUseEnergy(creep);
+            return;
+        }
+
         const target = Game.getObjectById(creep.taskTargetId);
         const result = creep.pickup(target);
         switch (result) {
