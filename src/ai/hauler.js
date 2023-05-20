@@ -5,6 +5,7 @@ const hauler = {
             case TASK.PULL: return this.pull(creep);
             case TASK.PICK_UP_ENERGY: return this.pickUpEnergy(creep);
             case TASK.DEPOSIT_ENERGY: return this.depositEnergy(creep);
+            case TASK.WITHDRAW_ENERGY: return this.withdrawEnergy(creep);
             default:
                 this.decideWhatToDo(creep);
                 return;
@@ -28,16 +29,22 @@ const hauler = {
             }
         }
 
-        const drops = creep.room.find(FIND_DROPPED_RESOURCES, {filter: x => x.resourceType === RESOURCE_ENERGY && x.amount > 50});
+        const drops = creep.room.find(FIND_DROPPED_RESOURCES, {filter: x => x.resourceType === RESOURCE_ENERGY && x.amount > 200});
         if (drops.length > 0) {
             creep.setTask(TASK.PICK_UP_ENERGY, drops[0].id);
             this.run(creep);
             return;
         }
 
-        // TODO: pick up energy
-        // TODO: store energy
-        // TODO: idle
+        const containers = _.filter(creep.room.containers, (x => x.store[RESOURCE_ENERGY] > creep.store.getCapacity()));
+        if (containers.length > 0) {
+            const target = Utils.getClosestRoomObjectToPosition(creep.pos, containers);
+            creep.setTask(TASK.WITHDRAW_ENERGY, target.id);
+            this.run(creep);
+            return;
+        }
+
+        // TODO: Idle somewhere where you aren't annoying, thanks
     },
 
     pull(creep) {
@@ -165,7 +172,30 @@ const hauler = {
                 creep.logActionError("depositEnergy", result);
                 return;
         }
-    }
+    },
+
+    withdrawEnergy(creep) {
+        if (creep.taskTargetId === undefined) {
+            this.decideWhatToDo(creep);
+            return;
+        }
+
+        const target = Game.getObjectById(creep.taskTargetId);
+        const result = creep.withdraw(target, RESOURCE_ENERGY);
+        switch (result) {
+            case OK:
+                creep.setTask(TASK.DECIDE_WHAT_TO_DO);
+                return;
+
+            case ERR_NOT_IN_RANGE:
+                creep.travelTo(target.pos);
+                return;
+
+            default:
+                creep.logActionError("withdrawEnergy", result);
+                return;
+        }
+    },
 };
 
 module.exports = hauler;

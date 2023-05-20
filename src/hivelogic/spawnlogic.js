@@ -75,7 +75,11 @@ const spawnLogic = {
             return false;
         }
 
-        return hive.population[ROLE.HAULER] < 1; // TODO: Maybe increase to 2 at RCL3 or make it dependant on alive harvester count
+        if (hive.population[ROLE.HARVESTER < 2]) {
+            return hive.population[ROLE.HAULER] < 1;
+        }
+
+        return hive.population[ROLE.HAULER] < 2;
     },
 
     _spawnHauler(hive, room, spawn) {
