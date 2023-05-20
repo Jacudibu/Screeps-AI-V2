@@ -22,6 +22,7 @@ require('prototypes/creep/kite');
 require('prototypes/creep/properties');
 require('prototypes/creep/tasks');
 require('prototypes/room/checkforrclupdate');
+require('prototypes/room/findClosestFreeEnergyStorage');
 require('prototypes/room/mineral');
 require('prototypes/room/scoutdata');
 require('prototypes/room/sources');
