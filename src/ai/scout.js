@@ -108,7 +108,7 @@ const scout = {
 
         if (targetRoom === undefined) {
             if (availableRooms.length > 0) {
-                targetRoom = availableRooms[_.random(0, availableRooms.length - 1)];
+                targetRoom = availableRooms[_.random(0, availableRooms.length)];
             } else { // must be sim.
                 creep.setTask(TASK.IDLE);
                 return;

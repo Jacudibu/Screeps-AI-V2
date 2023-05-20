@@ -97,7 +97,7 @@ const earlyWorker = {
 
         const extensions = _.filter(creep.room.myExtensions, extension => extension.canStillStoreEnergy());
         if (extensions.length > 0) {
-            return extensions[0];
+            return extensions[_.random(0, extensions.length)];
         }
 
         const towers = _.filter(creep.room.myTowers, tower => tower.canStillStoreEnergy());
