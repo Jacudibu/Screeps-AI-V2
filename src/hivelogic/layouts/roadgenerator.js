@@ -30,7 +30,7 @@ const roadGenerator = {
         const goals = [];
 
         for (const pos of hive.layout.core[STRUCTURE_ROAD]) {
-            goals.push({pos: new RoomPosition(pos.x, pos.y, hive.roomName), range: 1}); // TODO: Maybe only declare the position below the storage as goal? Needs benchmarking for multiroom requests
+            goals.push({pos: new RoomPosition(pos.x, pos.y, hive.roomName), range: 1}); // TODO: Maybe only declare hive pos as goal? Needs benchmarking for multiroom requests
         }
 
         const roomCallback = function(roomName) {
@@ -41,15 +41,49 @@ const roadGenerator = {
         hive.layout.roads.sources = [];
         for (const i in room.sources) {
             const path = this._getPathTo(hive, room, room.sources[i], goals, roomCallback);
+            if (path.length > 0) {
+                if (hive.layout.sourceContainers === undefined) {
+                    hive.layout.sourceContainers = [];
+                }
+
+                hive.layout.sourceContainers.push(path.shift());
+            } else {
+                // TODO: just grab another spot next to the source which isn't road
+                log.warning("Unable to automagically determine the best spot for our mineral container!")
+            }
+
             hive.layout.roads.sources.push(path);
         }
 
         if (room.controller) {
-            hive.layout.roads.controller = this._getPathTo(hive, room, room.controller, goals, roomCallback);
+            const path = this._getPathTo(hive, room, room.controller, goals, roomCallback);
+            if (path.length > 3) {
+                path.shift();
+                path.shift();
+                if (hive.layout.controllerContainers === undefined) {
+                    hive.layout.controllerContainers = [];
+                }
+
+                hive.layout.controllerContainers.push(path.shift());
+            }
+
+            hive.layout.roads.controller = path;
         }
 
         if (room.mineral) {
-            hive.layout.roads.mineral = this._getPathTo(hive, room, room.mineral, goals, roomCallback);
+            const path = this._getPathTo(hive, room, room.mineral, goals, roomCallback);
+            if (path.length > 0) {
+                if (hive.layout.mineralContainers === undefined) {
+                    hive.layout.mineralContainers = [];
+                }
+
+                hive.layout.mineralContainers.push(path.shift());
+            } else {
+                // TODO: just grab another spot next to the source which isn't road
+                log.warning("Unable to automagically determine the best spot for our mineral container!")
+            }
+
+            hive.layout.roads.mineral = path;
         }
     },
 
@@ -69,10 +103,6 @@ const roadGenerator = {
 
             path.push({x: pos.x, y: pos.y});
             costMatrixCache[room.name].set(pos.x, pos.y, COST_ROAD);
-        }
-
-        if (path.length > 0) {
-            path.shift();
         }
 
         return path;

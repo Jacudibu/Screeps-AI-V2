@@ -21,9 +21,7 @@ class Hive {
             RemotePlanner.setupRemoteData(this);
 
             if (this.layout.core === undefined && hasRespawned()) {
-                log.info("Generating room layout for " + this);
-                this.layout.core = layoutGenerator.generateCoreLayoutForRespawnRoom(this.room);
-                layoutGenerator.generateHiveRoads(this, this.room);
+                this.forceLayoutRegeneration();
             }
         }
 
@@ -107,6 +105,12 @@ class Hive {
 
     toString() {
         return "Hive@" + this.room.toString();
+    }
+
+    forceLayoutRegeneration() {
+        log.info("Generating room layout for " + this);
+        this.layout.core = layoutGenerator.generateCoreLayoutForRespawnRoom(this.room);
+        layoutGenerator.generateHiveRoads(this, this.room);
     }
 
     static onRespawn() {
