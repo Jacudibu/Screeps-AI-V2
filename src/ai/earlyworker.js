@@ -310,7 +310,8 @@ const earlyWorker = {
     },
 
     _upgradeController(creep) {
-        switch (creep.upgradeController(creep.room.controller)) {
+        const result = creep.upgradeController(creep.room.controller);
+        switch (result) {
             case OK:
                 break;
             case ERR_NOT_IN_RANGE:
@@ -320,7 +321,7 @@ const earlyWorker = {
                 this.run(creep);
                 break;
             default:
-                log.warning(creep + "upgrading controller" + " " + creep.upgradeController(creep.room.controller));
+                creep.logActionError("upgrading controller", result);
                 creep.setTask(TASK.DECIDE_WHAT_TO_DO);
                 break;
         }
