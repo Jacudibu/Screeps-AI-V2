@@ -93,6 +93,12 @@ const earlyWorker = {
     },
 
     _figureOutHowToUseEnergy(creep, didJustFinishConstructingSomething = false) {
+        if (creep.room.name !== creep.origin) {
+            creep.setTask(TASK.MOVE_TO_ROOM);
+            creep.targetRoomName = creep.origin;
+            return;
+        }
+
         let target = this._findDepositEnergyTarget(creep);
         if (target !== undefined) {
             creep.setTask(TASK.DEPOSIT_ENERGY, target.id);

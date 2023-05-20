@@ -56,6 +56,13 @@ const hiveMind = {
             }
         }
 
+        const damagedCreeps = room.find(FIND_MY_CREEPS, {filter: x => _.any(x.body, b => b.hits < 50)});
+        if (hostiles.length === 0 && damagedCreeps.length > 0) {
+            for (const tower of room.myTowers) {
+                tower.heal(damagedCreeps[0])
+            }
+        }
+
         if (Memory.settings.drawHiveLayout) {
             layoutGenerator.drawLayout(room.visual, hive.layout);
         }
