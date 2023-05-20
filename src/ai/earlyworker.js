@@ -128,7 +128,7 @@ const earlyWorker = {
 
         const extensions = _.filter(creep.room.myExtensions, extension => extension.canStillStoreEnergy());
         if (extensions.length > 0) {
-            return extensions[_.random(0, extensions.length)];
+            return extensions[_.random(0, extensions.length - 1)];
         }
 
         const towers = _.filter(creep.room.myTowers, tower => tower.canStillStoreEnergy());
@@ -177,7 +177,7 @@ const earlyWorker = {
         // TODO: Search for containers / tombstones / storage to pick up instead of mining
         const drops = creep.room.find(FIND_DROPPED_RESOURCES, {filter: x => x.resourceType === RESOURCE_ENERGY && x.amount > 25});
         if (drops.length > 0) {
-            creep.setTask(TASK.PICK_UP_ENERGY, drops[0].id);
+            creep.setTask(TASK.PICK_UP_ENERGY, drops[_.random(0, drops.length - 1)].id);
             this.run(creep);
             return;
         }
