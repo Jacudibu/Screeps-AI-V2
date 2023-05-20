@@ -99,10 +99,12 @@ const earlyWorker = {
             return;
         }
 
-        let target = this._findDepositEnergyTarget(creep);
-        if (target !== undefined) {
-            creep.setTask(TASK.DEPOSIT_ENERGY, target.id);
-            return;
+        if (Hives[creep.origin].population[ROLE.HAULER] < 2) {
+            let target = this._findDepositEnergyTarget(creep);
+            if (target !== undefined) {
+                creep.setTask(TASK.DEPOSIT_ENERGY, target.id);
+                return;
+            }
         }
 
         target = this._findConstructionSite(creep);
