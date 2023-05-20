@@ -28,6 +28,7 @@ require('prototypes/room/sources');
 require('prototypes/room/structurecache');
 require('prototypes/room/tasks');
 require('prototypes/source/distancetospawn');
+require('prototypes/source/nearbycontainer');
 require('prototypes/source/earlygameharvestercount');
 require('prototypes/structure/canstillstoreenergy');
 

@@ -2,7 +2,7 @@ global.TASK = {
     BUILD: "build",
     DECIDE_WHAT_TO_DO: "decide",
     DEPOSIT_ENERGY: "deposit_energy",
-    FINISHED_GETTING_PULLED: "deposit_reached",
+    FINISHED_GETTING_PULLED: "target_reached",
     GET_PULLED_TO_TARGET: "get_pulled",
     HARVEST_ENERGY: "harvest_energy",
     HARVEST_REMOTE_ENERGY: "harvest_remote_energy",
