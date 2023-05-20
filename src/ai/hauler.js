@@ -24,7 +24,7 @@ const hauler = {
         for (const other of pullableCreeps) {
             if (creep.room.find(FIND_MY_CREEPS, {filter: x => x.taskTargetId === other.id}).length === 0) {
                 creep.setTask(TASK.PULL, other.id);
-                this.run(creep);
+                this.pull(creep);
                 return;
             }
         }
@@ -32,15 +32,15 @@ const hauler = {
         const drops = creep.room.find(FIND_DROPPED_RESOURCES, {filter: x => x.resourceType === RESOURCE_ENERGY && x.amount > 200});
         if (drops.length > 0) {
             creep.setTask(TASK.PICK_UP_ENERGY, drops[0].id);
-            this.run(creep);
+            this.pickUpEnergy(creep);
             return;
         }
 
         const containers = _.filter(creep.room.containers, (x => x.store[RESOURCE_ENERGY] > creep.store.getCapacity()));
         if (containers.length > 0) {
-            const target = Utils.getClosestRoomObjectToPosition(creep.pos, containers);
+            const target = _.max(containers, x => x.store[RESOURCE_ENERGY]);
             creep.setTask(TASK.WITHDRAW_ENERGY, target.id);
-            this.run(creep);
+            this.withdrawEnergy(creep);
             return;
         }
 
