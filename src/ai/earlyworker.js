@@ -119,6 +119,8 @@ const earlyWorker = {
             case OK:
                 return;
             case ERR_FULL:
+                // Looks like ERR_FULL only gets returned after the creep is in range.
+                // This is actually useful for us, as the extensions will still have energy moving to them when we spawn something, which will happen even more frequently thanks to this.
                 this._figureOutHowToUseEnergy(creep);
                 this.run(creep);
                 return;

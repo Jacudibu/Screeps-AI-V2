@@ -27,22 +27,26 @@ function placePlannedConstructionSite(hive, room) {
         return;
     }
 
-    if (room.memory.rcl <= 1) {
+    const rcl = room.memory.rcl;
+    if (rcl <= 1) {
         return;
     }
 
-    const didPlaceSomething = placeConstructionSiteIfNeeded(hive.layout, room);
-    if (didPlaceSomething && room.memory.rcl < 4) {
+    const didPlaceSomething = placeConstructionSiteIfNeeded(hive.layout, room, rcl);
+    if (didPlaceSomething && rcl < 4) {
         for (const creep of room.find(FIND_MY_CREEPS, {filter: creep => creep.role === ROLE.EARLY_WORKER && creep.task === TASK.UPGRADE_CONTROLLER})) {
             creep.setTask(TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES, undefined);
         }
     }
 }
 
-function placeConstructionSiteIfNeeded(layout, room) {
+function placeConstructionSiteIfNeeded(layout, room, rcl) {
     for (let i = 0; i < STRUCTURE_PRIORITY_ORDER.length; i++) {
+        // TODO: only build necessary roads, somehow.
+        // We could do this by pathing through our base and connecting the ends of source roads depending on CPU
+        // At RCL2.5 (tho that'd be after container placement) and having different road arrays per RCL
         if (STRUCTURE_PRIORITY_ORDER[i] === STRUCTURE_ROAD && room.memory.rcl < 4) {
-            return false;
+            continue;
         }
 
         if (canStructureBeBuilt(layout.core, room, STRUCTURE_PRIORITY_ORDER[i])) {
@@ -50,7 +54,43 @@ function placeConstructionSiteIfNeeded(layout, room) {
         }
     }
 
+    if (rcl > 1) {
+        if (rcl < 6) {
+            if (tryPlacingSourceContainers(layout, room, rcl)) {
+                return true;
+            }
+        }
+
+        // TODO: do we want controller containers at rcl 2?
+        // TODO: get rid of those containers here at rcl 5 & 6 respectively, probably as a TASK that's set on RCL increase
+    }
+
     return false;
+}
+
+function tryPlacingSourceContainers(layout, room, rcl) {
+    if (layout.sourceContainers === undefined) {
+        return false;
+    }
+
+    if (layout.sourceContainers.length === 1 && rcl < 5) {
+        return placeContainerConstructionSite(room, layout.sourceContainers[0]);
+    }
+
+    if (placeContainerConstructionSite(room, layout.sourceContainers[0])) {
+        return true;
+    }
+
+    if (rcl < 5) {
+        // TODO: Ensure the further away source is at [1]
+        return placeContainerConstructionSite(room, layout.sourceContainers[1]);
+    }
+
+    return false;
+}
+
+function placeContainerConstructionSite(room, pos) {
+    return room.createConstructionSite(pos.x, pos.y, STRUCTURE_CONTAINER) === OK;
 }
 
 function canStructureBeBuilt(layout, room, structureType) {
