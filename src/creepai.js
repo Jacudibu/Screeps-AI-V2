@@ -1,5 +1,7 @@
 const ai = {
     [ROLE.EARLY_WORKER]: require('ai/earlyworker'),
+    [ROLE.HARVESTER]: require('ai/harvester'),
+    [ROLE.HAULER]: require('ai/hauler'),
     [ROLE.RANGED_DEFENDER]: require('ai/rangeddefender'),
     [ROLE.SCOUT]: require('ai/scout'),
 };

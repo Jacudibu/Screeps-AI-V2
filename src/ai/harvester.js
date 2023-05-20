@@ -3,13 +3,18 @@ const harvester = {
         switch (creep.task) {
             case TASK.GET_PULLED_TO_TARGET: return this.getPulled(creep);
             case TASK.HARVEST_ENERGY: return this.harvestEnergy(creep);
+            case TASK.FINISHED_GETTING_PULLED:
+                creep.setTask(TASK.HARVEST_ENERGY, creep.taskTargetId);
+                this.harvestEnergy(creep);
+                return;
+
             default:
                 this.decideWhatToDo(creep);
                 return;
         }
     },
 
-    decideWhatToDo: function (creep) {
+    decideWhatToDo(creep) {
         if (creep.taskTargetId === undefined) {
             this.findUnoccupiedSource(creep);
         }
@@ -38,18 +43,14 @@ const harvester = {
         log.error(creep + " no unoccupied sources found!")
     },
 
-    getPulled: function (creep, source) {
-        const target = Game.getObjectById(creep.taskTargetId);
-        const distance = creep.pos.getRangeTo(source.pos);
-        if (distance === 1) {
-            this.startHarvesting(creep);
-            return;
-        }
+    getPulled(creep) {
+        // const target = Game.getObjectById(creep.taskTargetId);
+        // const distance = creep.pos.getRangeTo(target.pos);
+        // if (distance === 1) {
+        //     this.startHarvesting(creep);
+        // }
 
-        if (distance === 2) {
-            creep.travelTo(target);
-            creep.setTask(TASK.HARVEST_ENERGY, creep.taskTargetId);
-        }
+        // TODO: Maybe some error logging if TTL < 1300 or so
     },
 
     startHarvesting(creep) {
@@ -63,13 +64,7 @@ const harvester = {
         switch (result) {
             case OK: return;
             case ERR_NOT_IN_RANGE:
-                const distance = creep.pos.getRangeTo(target.pos);
-                if (distance === 2) {
-                    creep.travelTo(target);
-                    return;
-                }
-
-                log.error(creep + " was set to harvest energy but further away than 2 tiles!");
+                log.error(creep + " was set to harvest energy but not in range!");
                 creep.setTask(TASK.GET_PULLED_TO_TARGET, creep.taskTargetId);
         }
     }
