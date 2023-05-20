@@ -65,6 +65,9 @@ const harvester = {
             case OK: return;
             case ERR_NOT_IN_RANGE:
                 log.error(creep + " was set to harvest energy but not in range!");
+                if (creep.ticksToLive % 100 === 0) {
+                    creep.setTask(TASK.GET_PULLED_TO_TARGET, creep.taskTargetId);
+                }
                 return;
         }
     }

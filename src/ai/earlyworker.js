@@ -145,6 +145,13 @@ const earlyWorker = {
             return this._getMoreEnergy(creep);
         }
 
+        // This should never be an issue, if it occurs, fix the cause instead of the symptom
+        // if (creep.taskTargetId === undefined) {
+        //     this._figureOutHowToUseEnergy(creep);
+        //     this.run(creep);
+        //     return;
+        // }
+
         const target = Game.getObjectById(creep.taskTargetId);
         const result = creep.transfer(target, RESOURCE_ENERGY);
         switch (result) {
@@ -158,6 +165,9 @@ const earlyWorker = {
                 return;
             case ERR_NOT_IN_RANGE:
                 creep.travelTo(target);
+                return;
+            default:
+                creep.logActionError("depositEnergy", result);
                 return;
         }
 
@@ -305,7 +315,7 @@ const earlyWorker = {
                 break;
             default:
                 log.warning(creep + "upgrading controller" + " " + creep.upgradeController(creep.room.controller));
-                creep.setTask(TASK.DEPOSIT_ENERGY, undefined);
+                creep.setTask(TASK.DECIDE_WHAT_TO_DO);
                 break;
         }
     },
