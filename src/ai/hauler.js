@@ -73,10 +73,15 @@ const hauler = {
 
         const distanceToTarget = creep.pos.getRangeTo(targetPos);
         if (distanceToTarget === requiredDistance) {
+            if (creep.fatigue > 0 || other.fatigue > 0) {
+                return;
+            }
             if (creep.move(other) !== OK) {
                 return;
             }
-            creep.pull(other);
+            if (creep.pull(other) !== OK) {
+                return;
+            }
             if (other.move(creep) !== OK) {
                 return;
             }
