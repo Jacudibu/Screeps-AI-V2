@@ -13,13 +13,24 @@ const spawnLogic = {
         if (threat !== undefined) {
             if (hive.population[ROLE.RANGED_DEFENDER] < 2) {
                 this._spawnRangedDefender(hive, room, idleSpawn);
+                return;
             }
-            return;
         }
 
         if (this._areHaulersNeeded(hive, room)) {
             this._spawnHauler(hive, room, idleSpawn);
             return;
+        }
+
+        for (const remoteName in hive.remotes) {
+            if (ThreatDetection.at(remoteName) === undefined) {
+                continue;
+            }
+
+            if (hive.population[ROLE.RANGED_DEFENDER] < 2) {
+                this._spawnRangedDefender(hive, room, idleSpawn);
+                return;
+            }
         }
 
         if (this._areHarvestersNeeded(hive, room)) {
