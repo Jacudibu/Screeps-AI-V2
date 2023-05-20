@@ -26,7 +26,7 @@ Creep.prototype.moveToRoom = function(options = undefined) {
     }
 };
 
-readableErrorCodes = {
+const readableErrorCodes = {
     [ERR_NOT_OWNER]: "ERR_NOT_OWNER (-1)",
     [ERR_NO_PATH]: "ERR_NO_PATH (-2)",
     [ERR_NAME_EXISTS]: "ERR_NAME_EXISTS (-3)",
