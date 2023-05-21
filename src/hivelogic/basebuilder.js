@@ -65,25 +65,53 @@ function placeConstructionSiteIfNeeded(layout, room, rcl) {
         // TODO: get rid of those containers here at rcl 5 & 6 respectively, probably as a TASK that's set on RCL increase
     }
 
+    if (rcl >= 2) {
+        if (tryPlacingRoadArray(room, layout.roads.sourceConnection)) {
+            return true;
+        }
+        for (const sourceRoads of layout.roads.sources) {
+            if (tryPlacingRoadArray(room, sourceRoads)) {
+                return true;
+            }
+        }
+        if (tryPlacingRoadArray(room, layout.roads.controllerConnection)) {
+            return true;
+        }
+        if (tryPlacingRoadArray(room, layout.roads.controller)) {
+            return true;
+        }
+    }
+
+
+    return false;
+}
+
+function tryPlacingRoadArray(room, array) {
+    for (const pos of array) {
+        if (room.createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD) === OK) {
+            return true;
+        }
+    }
+
     return false;
 }
 
 function tryPlacingSourceContainers(layout, room, rcl) {
-    if (layout.sourceContainers === undefined) {
+    if (layout.containers.source === undefined) {
         return false;
     }
 
-    if (layout.sourceContainers.length === 1 && rcl < 5) {
-        return placeContainerConstructionSite(room, layout.sourceContainers[0]);
+    if (layout.containers.source.length === 1 && rcl < 5) {
+        return placeContainerConstructionSite(room, layout.containers.source[0]);
     }
 
-    if (placeContainerConstructionSite(room, layout.sourceContainers[0])) {
+    if (placeContainerConstructionSite(room, layout.containers.source[0])) {
         return true;
     }
 
     if (rcl < 5) {
         // TODO: Ensure the further away source is at [1]
-        return placeContainerConstructionSite(room, layout.sourceContainers[1]);
+        return placeContainerConstructionSite(room, layout.containers.source[1]);
     }
 
     return false;
