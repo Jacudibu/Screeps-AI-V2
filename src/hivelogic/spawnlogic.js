@@ -86,7 +86,12 @@ const spawnLogic = {
     },
 
     _spawnHauler(hive, room, spawn) {
-        const pattern = [CARRY, MOVE];
+        let pattern;
+        if (hive.roadState > HIVE_ROAD_STATE.SOURCES) {
+            pattern = [CARRY, CARRY, MOVE];
+        } else {
+            pattern = [CARRY, MOVE];
+        }
         const body = this._createCreepBodyByRepeatedPattern(pattern, room);
 
         this._spawnCreep(hive, spawn, ROLE.HAULER, body, {})

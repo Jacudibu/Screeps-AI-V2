@@ -2,6 +2,12 @@ const RemotePlanner = require("hivelogic/remoteplanner");
 const layoutGenerator = require("hivelogic/layouts/layoutgenerator");
 global.Hives = {};
 
+global.HIVE_ROAD_STATE = {
+    NONE: 0,
+    SOURCES: 1,
+    CONTROLLER: 2,
+};
+
 /* Owned rooms are called Hives.
  * This class mostly serves as a memory wrapper with a fancy name.
  */
@@ -9,6 +15,7 @@ class Hive {
     constructor(roomName) {
         Hives[roomName] = this;
         this._roomName = roomName;
+        this.roadState = HIVE_ROAD_STATE.NONE;
 
         this.population = {};
         for (const role in ROLE) {
