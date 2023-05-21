@@ -76,6 +76,9 @@ function placeConstructionSiteIfNeeded(hive, layout, room, rcl) {
             }
         }
         hive.roadState = HIVE_ROAD_STATE.SOURCES;
+        if (tryPlacingRoadArray(room, layout.roads.center)) {
+            return true;
+        }
         if (tryPlacingRoadArray(room, layout.roads.controllerConnection)) {
             return true;
         }

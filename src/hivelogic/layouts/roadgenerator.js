@@ -99,6 +99,21 @@ const roadGenerator = {
             }
         }
 
+        const relativeCenterRoadPositions = [
+            [-3, 0], [-2, 1], [-1, 2],  [0, 3], [1, 2], [2, 1], [3, 0], [-2, -1], [-1, -2], [0, -3], [-1, -2], [2, -1]
+        ];
+        roads.center = [];
+        for (const relativePos of relativeCenterRoadPositions) {
+            const pos = {x: hive.pos.x + relativePos[0], y: hive.pos.y + relativePos[1]};
+            const index = hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos));
+            if (index === -1) {
+                continue;
+            }
+
+            roads.center.push(pos);
+            hive.layout.core.road.splice(hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos)), 1);
+        }
+
         roads.controllerConnection = [];
         if (roads.controller) {
             const end = _.last(roads.controller);
