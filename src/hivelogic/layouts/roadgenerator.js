@@ -37,8 +37,8 @@ const roadGenerator = {
             return roadGenerator._roomCallback(hive, roomName);
         };
 
-        hive.layout.roads = {};
-        hive.layout.roads.sources = [];
+        const roads = hive.layout.roads = {};
+        roads.sources = [];
         for (const i in room.sources) {
             const path = this._getPathTo(hive, room, room.sources[i], goals, roomCallback);
             if (path.length > 0) {
@@ -52,7 +52,7 @@ const roadGenerator = {
                 log.warning("Unable to automagically determine the best spot for our mineral container!")
             }
 
-            hive.layout.roads.sources.push(path);
+            roads.sources.push(path);
         }
 
         if (room.controller) {
@@ -67,7 +67,7 @@ const roadGenerator = {
                 hive.layout.controllerContainers.push(path.shift());
             }
 
-            hive.layout.roads.controller = path;
+            roads.controller = path;
         }
 
         if (room.mineral) {
@@ -83,12 +83,50 @@ const roadGenerator = {
                 log.warning("Unable to automagically determine the best spot for our mineral container!")
             }
 
-            hive.layout.roads.mineral = path;
+            roads.mineral = path;
+        }
+
+        const depositSpot = new RoomPosition(hive.pos.x, hive.pos.y-2, hive.roomName);
+        roads.sourceConnection = [];
+        for(const sourceRoads of roads.sources) {
+            if (sourceRoads.length === 0) {
+                continue;
+            }
+            const end = _.last(sourceRoads);
+            const path = this._getPathTo(hive, room, depositSpot, new RoomPosition(end.x, end.y, hive.roomName), roomCallback, false);
+            path.pop(); // last one's a duplicate
+            for (const pos of path) {
+                if (_.any(roads.sourceConnection, this._arePositionsEqual)) {
+                    continue;
+                }
+
+                log.info(pos);
+                roads.sourceConnection.push(pos);
+                hive.layout.core.road.splice(hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos)), 1);
+            }
+        }
+
+        roads.controllerConnection = [];
+        const end = _.last(roads.controller);
+        const path = this._getPathTo(hive, room, depositSpot, new RoomPosition(end.x, end.y, hive.roomName), roomCallback, false);
+        path.pop(); // last one's a duplicate
+        for (const pos of path) {
+            if (_.any(roads.sourceConnection, this._arePositionsEqual) || _.any(roads.controllerConnection, this._arePositionsEqual)) {
+                continue;
+            }
+
+            log.info(pos);
+            roads.controllerConnection.push(pos);
+            hive.layout.core.road.splice(hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos)), 1);
         }
     },
 
-    _getPathTo(hive, room, target, existingCoreRoads, roomCallback) {
-        const result = PathFinder.search(target.pos, existingCoreRoads, {
+    _arePositionsEqual(a, b) {
+        return a.x === b.x && a.y === b.y;
+    },
+
+    _getPathTo(hive, room, target, existingCoreRoads, roomCallback, testIfRoadsArePartOfLayout = true) {
+        const result = PathFinder.search(target instanceof RoomPosition ? target : target.pos, existingCoreRoads, {
             maxRooms: 1,
             plainCost: COST_PLAIN,
             swampCost: COST_SWAMP,
@@ -97,7 +135,7 @@ const roadGenerator = {
 
         const path = [];
         for (const pos of result.path) {
-            if (this._isRoadAlreadyPartOfLayout(hive, pos)) {
+            if (testIfRoadsArePartOfLayout && this._isRoadAlreadyPartOfLayout(hive, pos)) {
                 continue;
             }
 
