@@ -98,16 +98,19 @@ const roadGenerator = {
         }
 
         roads.controllerConnection = [];
-        const end = _.last(roads.controller);
-        const path = this._getPathTo(hive, room, depositSpot, new RoomPosition(end.x, end.y, hive.roomName), roomCallback, false);
-        path.pop(); // last one's a duplicate
-        for (const pos of path) {
-            if (_.any(roads.sourceConnection, this._arePositionsEqual) || _.any(roads.controllerConnection, this._arePositionsEqual)) {
-                continue;
-            }
+        if (roads.controller) {
+            const end = _.last(roads.controller);
+            const path = this._getPathTo(hive, room, depositSpot, new RoomPosition(end.x, end.y, hive.roomName), roomCallback, false);
+            path.pop(); // last one's a duplicate
+            for (const pos of path) {
+                if (_.any(roads.sourceConnection, this._arePositionsEqual)
+                    || _.any(roads.controllerConnection, this._arePositionsEqual)) {
+                    continue;
+                }
 
-            roads.controllerConnection.push(pos);
-            hive.layout.core.road.splice(hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos)), 1);
+                roads.controllerConnection.push(pos);
+                hive.layout.core.road.splice(hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos)), 1);
+            }
         }
     },
 
