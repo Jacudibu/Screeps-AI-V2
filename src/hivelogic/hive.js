@@ -109,6 +109,7 @@ class Hive {
 
     forceLayoutRegeneration() {
         log.info("Generating room layout for " + this);
+        this.layout = {};
         this.layout.core = layoutGenerator.generateCoreLayoutForRespawnRoom(this.room);
         layoutGenerator.generateHiveRoads(this, this.room);
     }
