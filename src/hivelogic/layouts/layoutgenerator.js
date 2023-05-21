@@ -1,6 +1,10 @@
 const roadGenerator = require("hivelogic/layouts/roadgenerator");
 const bunkerV1 = {"name":"bunkerV1","rcl":8,"width":11,"height":11,"buildings":{"extension":[{"x":0,"y":1},{"x":2,"y":1},{"x":3,"y":1},{"x":4,"y":1},{"x":3,"y":0},{"x":3,"y":2},{"x":5,"y":0},{"x":6,"y":1},{"x":7,"y":1},{"x":8,"y":1},{"x":7,"y":0},{"x":7,"y":2},{"x":9,"y":0},{"x":10,"y":0},{"x":10,"y":1},{"x":11,"y":1},{"x":11,"y":2},{"x":11,"y":4},{"x":11,"y":6},{"x":11,"y":5},{"x":10,"y":5},{"x":9,"y":3},{"x":9,"y":2},{"x":10,"y":3},{"x":8,"y":3},{"x":9,"y":4},{"x":11,"y":8},{"x":10,"y":8},{"x":9,"y":8},{"x":10,"y":7},{"x":10,"y":9},{"x":11,"y":10},{"x":10,"y":11},{"x":9,"y":10},{"x":8,"y":10},{"x":8,"y":9},{"x":8,"y":11},{"x":7,"y":10},{"x":6,"y":11},{"x":5,"y":10},{"x":4,"y":10},{"x":4,"y":9},{"x":4,"y":11},{"x":5,"y":8},{"x":6,"y":7},{"x":7,"y":6},{"x":8,"y":5},{"x":9,"y":6},{"x":8,"y":7},{"x":7,"y":8},{"x":6,"y":9},{"x":1,"y":2},{"x":1,"y":3},{"x":1,"y":4},{"x":2,"y":3},{"x":4,"y":3},{"x":1,"y":0},{"x":0,"y":0},{"x":3,"y":10},{"x":0,"y":3}],"spawn":[{"x":5,"y":3},{"x":4,"y":4},{"x":6,"y":4}],"storage":[{"x":5,"y":5}],"terminal":[{"x":4,"y":5}],"link":[{"x":6,"y":3}],"powerSpawn":[{"x":6,"y":5}],"lab":[{"x":3,"y":7},{"x":3,"y":8},{"x":2,"y":8},{"x":2,"y":9},{"x":1,"y":9},{"x":0,"y":8},{"x":0,"y":7},{"x":1,"y":7},{"x":1,"y":6},{"x":2,"y":6}],"tower":[{"x":6,"y":8},{"x":8,"y":6},{"x":3,"y":4},{"x":5,"y":2},{"x":4,"y":7},{"x":7,"y":4}],"nuker":[{"x":0,"y":5}],"road":[{"x":4,"y":8},{"x":3,"y":9},{"x":2,"y":10},{"x":3,"y":11},{"x":5,"y":11},{"x":6,"y":10},{"x":5,"y":9},{"x":5,"y":7},{"x":6,"y":6},{"x":7,"y":5},{"x":8,"y":4},{"x":9,"y":5},{"x":10,"y":6},{"x":9,"y":7},{"x":8,"y":8},{"x":7,"y":9},{"x":7,"y":11},{"x":9,"y":11},{"x":10,"y":10},{"x":11,"y":11},{"x":9,"y":9},{"x":11,"y":9},{"x":11,"y":7},{"x":10,"y":4},{"x":11,"y":3},{"x":10,"y":2},{"x":9,"y":1},{"x":8,"y":0},{"x":8,"y":2},{"x":7,"y":3},{"x":6,"y":2},{"x":5,"y":1},{"x":6,"y":0},{"x":4,"y":0},{"x":4,"y":2},{"x":3,"y":3},{"x":2,"y":2},{"x":1,"y":1},{"x":2,"y":4},{"x":3,"y":5},{"x":4,"y":6},{"x":5,"y":6},{"x":3,"y":6},{"x":2,"y":7},{"x":1,"y":8},{"x":1,"y":5},{"x":0,"y":2},{"x":2,"y":0},{"x":0,"y":4},{"x":7,"y":7}],"observer":[{"x":2,"y":11}],"factory":[{"x":1,"y":10}]}};
 
+// https://screepers.github.io/screeps-tools/?share=N4IgTgxgNiBcAcAaEAjArgSygEwwOwHMBnOUIgFwHswBDAgUzgG1QAPOAJgAZkBPOAIzwAvgF1kRAA40A7nmZtOAvoIBswxItgcOK2AICcGrYb1CxyMJRrYFIdtp4h+j4-cEGzRze-1JngiI+DhzKAfreWjpmQSae4aFuIWEuicGcugkcSZwAzHocuTl+Bdnp+gDsBUXlAqoFACzFHA2NxQJV4R3t-i517fF9AKzNTn1N5aFmI5OZfeqT+V0VzUt9sb4tXs1DBVztnevt9V2RvgK7Cfu1J-PNc3nNKZwTUWOcM3Fttb2Pk61dBZRS7DCwgeiscj0PBEDCUeSwFjnX6uH4FAT3PaYhIYybvbS4r5ZJ6lAbVHrfEyHF6rdG04n-UmzSmbNY0xkJGrAlkODp0m5MqmCzYgv5RZ7aLmsgqfTYA1Ky3nU7SKtQy47k2qiyXtbUtA7bWrK7gaq6m1KE856y287WGXUxc2BJ2VA1dVWVMxA5HTemg5nuv1qbHjEnLMkJD1CdUBhVhuNar0O8McvorSZ29PcwEUrqvTb4wqjHkeMz55JlsFQGgoOwhNmoqIN+2pzjXKLypQ7fkdx0ZvvZvpnEK3DzNUeucQgKFgAC2+BoMER4sdU4AZjQIFQwC4kSF8f0p5JKDJ6GAAMrSOR10s5qeUFBEM8ANzPN5VpKnUHwAGt36ZwynPA0B-N9lzlX0pyoU8wH-FFujxX1Y0ELMC2FXlBjbeMsNEYRhCAA#/building-planner
+const bunkerV2 = {"name":"bunkerV2","rcl":8,"width":11,"height":11,"buildings":{"storage":[{"x":5,"y":4}],"spawn":[{"x":6,"y":2},{"x":7,"y":5},{"x":4,"y":4}],"road":[{"x":5,"y":6},{"x":4,"y":5},{"x":3,"y":4},{"x":6,"y":5},{"x":7,"y":4},{"x":4,"y":7},{"x":6,"y":7},{"x":7,"y":8},{"x":8,"y":9},{"x":3,"y":8},{"x":2,"y":9},{"x":1,"y":10},{"x":9,"y":10},{"x":2,"y":3},{"x":3,"y":2},{"x":4,"y":1},{"x":5,"y":0},{"x":6,"y":1},{"x":7,"y":2},{"x":8,"y":3},{"x":8,"y":4},{"x":9,"y":5},{"x":10,"y":6},{"x":2,"y":4},{"x":1,"y":5},{"x":0,"y":6},{"x":1,"y":2},{"x":7,"y":9},{"x":6,"y":10},{"x":5,"y":11},{"x":4,"y":10},{"x":3,"y":9},{"x":9,"y":2},{"x":10,"y":1}],"extension":[{"x":3,"y":6},{"x":3,"y":7},{"x":7,"y":6},{"x":7,"y":7},{"x":5,"y":7},{"x":4,"y":8},{"x":6,"y":8},{"x":4,"y":9},{"x":3,"y":10},{"x":2,"y":10},{"x":8,"y":7},{"x":8,"y":8},{"x":9,"y":8},{"x":7,"y":10},{"x":8,"y":10},{"x":9,"y":9},{"x":10,"y":10},{"x":2,"y":7},{"x":1,"y":8},{"x":2,"y":8},{"x":10,"y":9},{"x":6,"y":9},{"x":8,"y":11},{"x":9,"y":11},{"x":2,"y":11},{"x":1,"y":11},{"x":1,"y":9},{"x":0,"y":9},{"x":0,"y":10},{"x":2,"y":5},{"x":2,"y":6},{"x":1,"y":6},{"x":1,"y":7},{"x":0,"y":7},{"x":0,"y":5},{"x":0,"y":4},{"x":1,"y":4},{"x":1,"y":3},{"x":2,"y":1},{"x":2,"y":2},{"x":3,"y":1},{"x":8,"y":1},{"x":7,"y":1},{"x":8,"y":2},{"x":7,"y":0},{"x":6,"y":3},{"x":4,"y":11},{"x":3,"y":11},{"x":7,"y":11},{"x":6,"y":11},{"x":0,"y":2},{"x":0,"y":3},{"x":9,"y":3},{"x":10,"y":3},{"x":10,"y":2},{"x":3,"y":0},{"x":5,"y":9},{"x":5,"y":10},{"x":4,"y":0},{"x":6,"y":0}],"lab":[{"x":8,"y":6},{"x":8,"y":5},{"x":9,"y":6},{"x":9,"y":7},{"x":10,"y":7},{"x":9,"y":4},{"x":10,"y":4},{"x":10,"y":5},{"x":11,"y":5},{"x":11,"y":6}],"terminal":[{"x":6,"y":4}],"factory":[{"x":5,"y":2}],"powerSpawn":[{"x":4,"y":2}],"observer":[{"x":10,"y":8}],"link":[{"x":4,"y":3}],"nuker":[{"x":9,"y":1}],"tower":[{"x":3,"y":3},{"x":5,"y":1},{"x":7,"y":3},{"x":5,"y":8},{"x":4,"y":6},{"x":6,"y":6}]}}
+
+
 const layoutGenerator = {
     generateRoomLayout(room) {
         const bunkerLayout = bunkerV1;
@@ -49,7 +53,7 @@ const layoutGenerator = {
     processScreepersRoomPlan(input) {
         let result = {};
         const boundaries = this._discoverBoundaries(input.buildings);
-        log.info(JSON.stringify(boundaries));
+        log.info("Boundaries: " + JSON.stringify(boundaries));
 
         result.rcl = input.rcl;
         result.width = boundaries.width;
@@ -57,7 +61,7 @@ const layoutGenerator = {
         result.buildings = {};
 
         for (const buildingKey in input.buildings) {
-            result.buildings[buildingKey] = this._offsetPositions(input.buildings[buildingKey]);
+            result.buildings[buildingKey] = this._offsetPositions(input.buildings[buildingKey], -boundaries.offsetX, -boundaries.offsetY);
         }
 
         return result;
@@ -88,7 +92,6 @@ const layoutGenerator = {
 
             for (let i = 0; i < buildings[buildingKey].length; i++) {
                 const pos = buildings[buildingKey][i];
-                log.info(JSON.stringify(pos) + " " + minX + " " + pos.x + " " + pos.y);
                 if (pos.x > maxX) {
                     maxX = pos.x;
                 }
@@ -156,3 +159,8 @@ const layoutGenerator = {
 
 module.exports = layoutGenerator;
 profiler.registerObject(layoutGenerator, "layoutGenerator");
+
+global.processScreepersRoomPlan = function() {
+    const value = "insert JSON here";
+    return JSON.stringify(layoutGenerator.processScreepersRoomPlan(value));
+};
