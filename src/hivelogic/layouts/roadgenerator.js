@@ -89,7 +89,8 @@ const roadGenerator = {
             const path = this._getPathTo(hive, room, depositSpot, new RoomPosition(end.x, end.y, hive.roomName), roomCallback, false);
             path.pop(); // last one's a duplicate
             for (const pos of path) {
-                if (_.any(roads.sourceConnection, this._arePositionsEqual)) {
+                const index = hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos));
+                if (index === -1) {
                     continue;
                 }
 
@@ -104,16 +105,13 @@ const roadGenerator = {
             const path = this._getPathTo(hive, room, depositSpot, new RoomPosition(end.x, end.y, hive.roomName), roomCallback, false);
             path.pop(); // last one's a duplicate
             for (const pos of path) {
-                if (_.any(roads.sourceConnection, this._arePositionsEqual)
-                    || _.any(roads.controllerConnection, this._arePositionsEqual)) {
+                const index = hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos));
+                if (index === -1) {
                     continue;
                 }
 
                 roads.controllerConnection.push(pos);
-                const index = hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos));
-                if (index !== -1) {
-                    hive.layout.core.road.splice(index, 1);
-                }
+                hive.layout.core.road.splice(index, 1);
             }
         }
 
@@ -123,17 +121,13 @@ const roadGenerator = {
             const path = this._getPathTo(hive, room, depositSpot, new RoomPosition(end.x, end.y, hive.roomName), roomCallback, false);
             path.pop(); // last one's a duplicate
             for (const pos of path) {
-                if (_.any(roads.sourceConnection, this._arePositionsEqual)
-                    || _.any(roads.controllerConnection, this._arePositionsEqual)
-                    || _.any(roads.mineralConnection, this._arePositionsEqual)) {
+                const index = hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos));
+                if (index === -1) {
                     continue;
                 }
 
                 roads.mineralConnection.push(pos);
-                const index = hive.layout.core.road.findIndex(a => this._arePositionsEqual(a, pos));
-                if (index !== -1) {
-                    hive.layout.core.road.splice(index, 1);
-                }
+                hive.layout.core.road.splice(index, 1);
             }
         }
     },
