@@ -156,10 +156,18 @@ const hauler = {
             target = Game.getObjectById(creep.taskTargetId)
         }
 
+        const diff = creep.store.getUsedCapacity(RESOURCE_ENERGY) - target.store.getFreeCapacity(RESOURCE_ENERGY);
         const result = creep.transfer(target, RESOURCE_ENERGY);
         switch (result) {
             case OK:
                 creep.taskTargetId = undefined;
+                // if (diff > 0) {
+                //     // TODO: This doesn't work cause findClosestFreeEnergy doesn't work with the "refreshed" energy from this tick
+                //     // FIXME: Cache incoming energy deliveries somewhere und use that cache instead
+                //     const newTarget = creep.room.findClosestFreeEnergyStorageTo(creep.pos, creep.store.getUsedCapacity(RESOURCE_ENERGY) - diff);
+                //     creep.taskTargetId = newTarget.id;
+                //     creep.moveTo(newTarget)
+                // }
                 return;
             case ERR_NOT_IN_RANGE:
                 creep.travelTo(target);
