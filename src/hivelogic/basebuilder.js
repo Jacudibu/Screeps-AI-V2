@@ -32,7 +32,7 @@ function placePlannedConstructionSite(hive, room) {
         return;
     }
 
-    const didPlaceSomething = placeConstructionSiteIfNeeded(hive.layout, room, rcl);
+    const didPlaceSomething = placeConstructionSiteIfNeeded(hive, hive.layout, room, rcl);
     if (didPlaceSomething && rcl < 4) {
         for (const creep of room.find(FIND_MY_CREEPS, {filter: creep => creep.role === ROLE.EARLY_WORKER && creep.task === TASK.UPGRADE_CONTROLLER})) {
             creep.setTask(TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES, undefined);
@@ -40,7 +40,7 @@ function placePlannedConstructionSite(hive, room) {
     }
 }
 
-function placeConstructionSiteIfNeeded(layout, room, rcl) {
+function placeConstructionSiteIfNeeded(hive, layout, room, rcl) {
     for (let i = 0; i < STRUCTURE_PRIORITY_ORDER.length; i++) {
         // TODO: only build necessary roads, somehow.
         // We could do this by pathing through our base and connecting the ends of source roads depending on CPU
@@ -65,6 +65,7 @@ function placeConstructionSiteIfNeeded(layout, room, rcl) {
         // TODO: get rid of those containers here at rcl 5 & 6 respectively, probably as a TASK that's set on RCL increase
     }
 
+    hive.roadState = HIVE_ROAD_STATE.NONE;
     if (rcl >= 2) {
         if (tryPlacingRoadArray(room, layout.roads.sourceConnection)) {
             return true;
@@ -74,9 +75,11 @@ function placeConstructionSiteIfNeeded(layout, room, rcl) {
                 return true;
             }
         }
+        hive.roadState = HIVE_ROAD_STATE.SOURCES;
         if (tryPlacingRoadArray(room, layout.roads.controllerConnection)) {
             return true;
         }
+        hive.roadState = HIVE_ROAD_STATE.CONTROLLER;
         if (tryPlacingRoadArray(room, layout.roads.controller)) {
             return true;
         }
