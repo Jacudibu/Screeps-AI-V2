@@ -130,23 +130,17 @@ const layoutGenerator = {
             return;
         }
 
-        if (layout.roads.sources) {
-            for (const i in layout.roads.sources) {
-                for (const pos of layout.roads.sources[i]) {
+        for (const categoryName in layout.roads) {
+            if (categoryName === "sources") {
+                for (const i in layout.roads[categoryName]) {
+                    for (const pos of layout.roads[categoryName][i]) {
+                        roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
+                    }
+                }
+            } else {
+                for (const pos of layout.roads[categoryName]) {
                     roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
                 }
-            }
-        }
-
-        if (layout.roads.controller) {
-            for (const pos of layout.roads.controller) {
-                roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
-            }
-        }
-
-        if (layout.roads.mineral) {
-            for (const pos of layout.roads.mineral) {
-                roomVisual.structure(pos.x, pos.y, STRUCTURE_ROAD, opts);
             }
         }
 
