@@ -79,7 +79,10 @@ const spawnLogic = {
             return hive.population[ROLE.HAULER] < 1;
         }
 
-        return hive.population[ROLE.HAULER] < 2;
+        return hive.population[ROLE.HAULER] < 3;
+
+        // TODO: Make haulers bigger and lower amount once we have roads built
+        // TODO: Distance to deposits should also play a part in this until we have links
     },
 
     _spawnHauler(hive, room, spawn) {
