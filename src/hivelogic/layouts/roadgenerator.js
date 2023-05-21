@@ -38,12 +38,13 @@ const roadGenerator = {
         };
 
         const roads = hive.layout.roads = {};
+        const containers = hive.layout.containers = {};
         roads.sources = [];
-        hive.layout.sourceContainers = [];
+        containers.source = [];
         for (const i in room.sources) {
             const path = this._getPathTo(hive, room, room.sources[i], goals, roomCallback);
             if (path.length > 0) {
-                hive.layout.sourceContainers.push([path.shift()]);
+                containers.source.push([path.shift()]);
             } else {
                 // TODO: just grab another spot next to the source which isn't road
                 log.warning("Unable to automagically determine the best spot for our source container!")
@@ -57,7 +58,7 @@ const roadGenerator = {
             if (path.length > 3) {
                 path.shift();
                 path.shift();
-                hive.layout.controllerContainers = [path.shift()];
+                containers.controller = [path.shift()];
             } else {
                 // TODO: just grab another spot next to the source which isn't road
                 log.warning("Unable to automagically determine the best spot for our controller container!")
@@ -69,7 +70,7 @@ const roadGenerator = {
         if (room.mineral) {
             const path = this._getPathTo(hive, room, room.mineral, goals, roomCallback);
             if (path.length > 0) {
-                hive.layout.mineralContainers = [path.shift()];
+                containers.mineral = [path.shift()];
             } else {
                 // TODO: just grab another spot next to the mineral which isn't road
                 log.warning("Unable to automagically determine the best spot for our mineral container!")

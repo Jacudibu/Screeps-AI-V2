@@ -144,6 +144,12 @@ const layoutGenerator = {
             }
         }
 
+        for (const categoryName in layout.containers) {
+            for (const pos of layout.containers[categoryName]) {
+                roomVisual.structure(pos.x, pos.y, STRUCTURE_CONTAINER, opts);
+            }
+        }
+
         roomVisual.connectRoads(opts);
     }
 };
