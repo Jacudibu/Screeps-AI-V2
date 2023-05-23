@@ -16,6 +16,7 @@ const earlyWorker = {
             case TASK.HARVEST_REMOTE_ENERGY: return this._harvestRemoteEnergy(creep);
             case TASK.PICK_UP_ENERGY: return this._pickUpEnergy(creep);
             case TASK.DEPOSIT_ENERGY: return this._depositEnergy(creep);
+            case TASK.DISMANTLE: return this._dismantle(creep);
             case TASK.BUILD: return this._build(creep);
             case TASK.UPGRADE_CONTROLLER: return this._upgradeController(creep);
             case TASK.UPGRADE_CONTROLLER_BUT_LOOK_OUT_FOR_CONSTRUCTION_SITES: return this._upgradeControllerButLookOutForConstructionSites(creep);
@@ -87,8 +88,34 @@ const earlyWorker = {
             return this._getMoreEnergy(creep);
         }
 
-        if(creep.harvest(source) === ERR_NOT_IN_RANGE) {
-            creep.travelTo(source, {stuckValue: 1});
+        const result = creep.harvest(source);
+        switch (result) {
+            case OK: return;
+            case ERR_NOT_IN_RANGE:
+                creep.travelTo(source, {stuckValue: 1});
+                return;
+            case ERR_NOT_OWNER:
+                creep.logActionError("harvest", result);
+                const reservation = creep.room.controller.reservation;
+                if (reservation !== undefined) {
+                    if (reservation.username === INVADER_PLAYER_NAME) {
+                        const hostileStructures = creep.room.find(FIND_HOSTILE_STRUCTURES);
+                        const invaderCore = hostileStructures.find(x => x.structureType === STRUCTURE_INVADER_CORE);
+                        if (invaderCore !== undefined) {
+                            log.info("Invader core detected!");
+                            creep.setTask(TASK.DISMANTLE, invaderCore.id);
+                        }
+                    } else {
+                        // TODO: react to that trespassing!
+                        log.info("Reserved by " + reservation.username)
+                    }
+                    return;
+                }
+                return;
+
+            default:
+                log.logActionError("harvest", result);
+                return;
         }
     },
 
@@ -178,8 +205,20 @@ const earlyWorker = {
                 creep.logActionError("depositEnergy", result);
                 return;
         }
+    },
 
-        this.run(creep);
+    _dismantle(creep) {
+        const target = Game.getObjectById(creep.taskTargetId);
+        const result = creep.dismantle(target);
+
+        switch (result) {
+            case OK: return;
+            case ERR_NOT_IN_RANGE:
+                creep.travelTo(target);
+                return;
+            default:
+                creep.logActionError("dismantle", result);
+        }
     },
 
     _moveBackToHive(creep) {
